@@ -3,19 +3,38 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import 'package:wasurenai/screens/edit_tiem_view.dart';
 import '../../models/situation.dart';
-import '../../services/item_service.dart';
 import '../../widgets/custom_list_tile.dart';
 import '../../widgets/custom_header.dart';
 
-class ItemListScreen extends StatelessWidget {
+class ItemListScreen extends StatefulWidget {
   final Situation situation;
   final String userId;
 
   const ItemListScreen(
       {super.key, required this.situation, required this.userId});
 
+  @override
+  _ItemListScreenState createState() => _ItemListScreenState();
+}
+
+class _ItemListScreenState extends State<ItemListScreen> {
+  late List<Item> items;
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기화: 상황의 아이템 리스트를 로컬에 저장
+    items = List.from(widget.situation.items);
+  }
+
+  void _updateItemCheckedState(int index, bool isChecked) {
+    setState(() {
+      items[index].isChecked = isChecked;
+    });
+  }
+
   // 카드 스와이퍼를 표시하는 함수
-  void _showItemSwiper(BuildContext context, List<Item> items, int index) {
+  void _showItemSwiper(BuildContext context, int index) {
     if (items.isEmpty) return;
 
     showModalBottomSheet(
@@ -74,14 +93,12 @@ class ItemListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ItemService itemService = ItemService();
-
     return Scaffold(
       body: Stack(
         children: [
           // 상단 헤더
           CustomHeader(
-            title: situation.name,
+            title: widget.situation.name,
             onBackPress: () {
               Navigator.pop(context); // 이전 화면으로 이동
             },
@@ -90,35 +107,26 @@ class ItemListScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 150), // 헤더 높이 조정
               Expanded(
-                child: StreamBuilder<List<Item>>(
-                  stream: itemService.listenToItems(userId, situation.name),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('리스트가 비어 있습니다.'));
-                    }
-
-                    final items = snapshot.data!;
-
-                    return ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final item = items[index];
-                        return CustomListTile(
-                          title: item.name,
-                          subtitle: item.location,
-                          showSwitch: true, // 스위치 비활성화
-                          onTap: () {
-                            _showItemSwiper(context, items, index);
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
+                child: items.isEmpty
+                    ? const Center(child: Text('リストが空です。'))
+                    : ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          return CustomListTile(
+                            title: item.name,
+                            subtitle: item.location,
+                            isChecked: item.isChecked,
+                            onCheckedChange: (bool value) {
+                              _updateItemCheckedState(index, value);
+                            },
+                            onTap: () {
+                              _showItemSwiper(context, index);
+                            },
+                            showSwitch: true,
+                          );
+                        },
+                      ),
               ),
               // 하단 버튼
               ReusableButtons(
@@ -138,8 +146,8 @@ class ItemListScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => EditItemView(
-                        situation: situation,
-                        userId: userId,
+                        situation: widget.situation,
+                        userId: widget.userId,
                       ),
                     ),
                   );

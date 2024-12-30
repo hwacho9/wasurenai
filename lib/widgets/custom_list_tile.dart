@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/data/app_colors.dart';
 
 class CustomListTile extends StatelessWidget {
   final String title;
@@ -39,14 +40,16 @@ class CustomListTile extends StatelessWidget {
             ),
           ],
         ),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            child: Stack(
-              children: [
-                // Title in the center
-                Center(
+        child: Stack(
+          children: [
+            // InkWell for onTap event
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(40),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                child: Center(
                   child: Text(
                     title,
                     style: const TextStyle(
@@ -55,34 +58,50 @@ class CustomListTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Trailing widget or Switch on the right
-                if (trailing != null)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: trailing!,
-                  )
-                else if (showSwitch)
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
+              ),
+            ),
+            // Trailing widget or Switch
+            if (trailing != null)
+              Positioned(
+                right: 16,
+                top: 0,
+                bottom: 0,
+                child: trailing!,
+              )
+            else if (showSwitch)
+              Positioned(
+                right: 16,
+                top: 0,
+                bottom: 0,
+                child: IgnorePointer(
+                  ignoring: false,
+                  child: Theme(
+                    data: ThemeData(
+                      useMaterial3: true,
+                    ).copyWith(
+                      colorScheme: Theme.of(context)
+                          .colorScheme
+                          .copyWith(outline: AppColors.lightRed),
+                    ),
                     child: Switch(
+                      activeColor: Colors.white,
+                      activeTrackColor: AppColors.lightRed,
+                      inactiveTrackColor: Colors.white,
+                      inactiveThumbColor: AppColors.lightRed,
                       value: isChecked,
                       onChanged: onCheckedChange,
                     ),
-                  )
-                else
-                  const Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: Icon(Icons.arrow_forward_ios, color: Colors.black),
                   ),
-              ],
-            ),
-          ),
+                ),
+              )
+            else
+              const Positioned(
+                right: 16,
+                top: 0,
+                bottom: 0,
+                child: Icon(Icons.arrow_forward_ios, color: Colors.black),
+              ),
+          ],
         ),
       ),
     );
