@@ -1,7 +1,9 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wasurenai/provider/auth_provider.dart';
+import 'package:wasurenai/screens/item_list_screen.dart';
+import 'package:wasurenai/splash_view.dart';
 import '../../models/situation.dart';
-import 'item_list_screen.dart';
 import '../../widgets/custom_list_tile.dart';
 
 class HomeView extends StatelessWidget {
@@ -28,6 +30,23 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('상황별 체크리스트'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              final authProvider =
+                  Provider.of<AuthProvider>(context, listen: false);
+              await authProvider.signOut();
+
+              // 로그아웃 후 SplashView로 이동
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => SplashView()),
+                (route) => false, // 이전 경로 제거
+              );
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: situations.length,
