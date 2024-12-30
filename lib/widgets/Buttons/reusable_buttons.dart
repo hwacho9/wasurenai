@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wasurenai/data/app_colors.dart';
 
 class ReusableButtons extends StatelessWidget {
   final String settingsLabel;
@@ -10,6 +9,11 @@ class ReusableButtons extends StatelessWidget {
   final IconData editIcon;
   final VoidCallback onEditPressed;
 
+  final Color? settingsBackgroundColor;
+  final Color? settingsForegroundColor;
+  final Color? editBackgroundColor;
+  final Color? editForegroundColor;
+
   const ReusableButtons({
     required this.settingsLabel,
     required this.settingsIcon,
@@ -17,6 +21,10 @@ class ReusableButtons extends StatelessWidget {
     required this.editLabel,
     required this.editIcon,
     required this.onEditPressed,
+    this.settingsBackgroundColor,
+    this.settingsForegroundColor,
+    this.editBackgroundColor,
+    this.editForegroundColor,
     Key? key,
   }) : super(key: key);
 
@@ -29,15 +37,15 @@ class ReusableButtons extends StatelessWidget {
         children: [
           ElevatedButton.icon(
             onPressed: onPressed,
-            icon: Icon(settingsIcon, size: 20), // 아이콘 크기 증가
+            icon: Icon(settingsIcon, size: 20), // 아이콘 크기
             label: Text(
               settingsLabel,
-              style: const TextStyle(fontSize: 18), // 텍스트 크기 증가
+              style: const TextStyle(fontSize: 18), // 텍스트 크기
             ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              backgroundColor: AppColors.scaffoldBackground,
-              foregroundColor: Colors.black,
+              backgroundColor: settingsBackgroundColor ?? Colors.grey[300],
+              foregroundColor: settingsForegroundColor ?? Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16), // 버튼 모서리 둥글게
               ),
@@ -45,15 +53,15 @@ class ReusableButtons extends StatelessWidget {
           ),
           ElevatedButton.icon(
             onPressed: onEditPressed,
-            icon: Icon(editIcon, size: 20), // 아이콘 크기 증가
+            icon: Icon(editIcon, size: 20), // 아이콘 크기
             label: Text(
               editLabel,
-              style: const TextStyle(fontSize: 18), // 텍스트 크기 증가
+              style: const TextStyle(fontSize: 18), // 텍스트 크기
             ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              backgroundColor: AppColors.scaffoldBackground,
-              foregroundColor: Colors.black,
+              backgroundColor: editBackgroundColor ?? Colors.grey[300],
+              foregroundColor: editForegroundColor ?? Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16), // 버튼 모서리 둥글게
               ),

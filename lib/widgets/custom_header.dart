@@ -24,7 +24,7 @@ class CustomHeader extends StatelessWidget {
             children: [
               Container(
                 width: 35.47,
-                height: 35.47,
+                height: 40.47,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(),
@@ -36,7 +36,7 @@ class CustomHeader extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  height: 35.47,
+                  height: 40.47,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(

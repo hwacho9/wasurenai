@@ -11,7 +11,8 @@ class ItemListScreen extends StatelessWidget {
   final Situation situation;
   final String userId;
 
-  ItemListScreen({required this.situation, required this.userId});
+  const ItemListScreen(
+      {super.key, required this.situation, required this.userId});
 
   // 카드 스와이퍼를 표시하는 함수
   void _showItemSwiper(BuildContext context, List<Item> items, int index) {
@@ -109,7 +110,7 @@ class ItemListScreen extends StatelessWidget {
                         return CustomListTile(
                           title: item.name,
                           subtitle: item.location,
-                          showSwitch: false, // 스위치 비활성화
+                          showSwitch: true, // 스위치 비활성화
                           onTap: () {
                             _showItemSwiper(context, items, index);
                           },
@@ -121,12 +122,16 @@ class ItemListScreen extends StatelessWidget {
               ),
               // 하단 버튼
               ReusableButtons(
-                settingsLabel: '설정',
-                settingsIcon: Icons.settings,
+                settingsBackgroundColor: Colors.white, // 설정 버튼 배경색
+                settingsForegroundColor: Colors.black, // 설정 버튼 텍스트 색
+                editBackgroundColor: Colors.white, // 편집 버튼 배경색
+                editForegroundColor: Colors.black, // 편집 버튼 텍스트 색
+                settingsLabel: 'リセット',
+                settingsIcon: Icons.restart_alt,
                 onPressed: () {
                   // 설정 버튼 동작
                 },
-                editLabel: '편집',
+                editLabel: '編集',
                 editIcon: Icons.edit,
                 onEditPressed: () {
                   Navigator.push(
