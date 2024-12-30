@@ -1,8 +1,8 @@
 // item_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import '../models/situation.dart';
-import '../widgets/custom_list_tile.dart';
+import '../../models/situation.dart';
+import '../../widgets/custom_list_tile.dart';
 
 class ItemListScreen extends StatefulWidget {
   final Situation situation;

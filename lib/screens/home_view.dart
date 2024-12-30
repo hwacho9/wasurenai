@@ -1,10 +1,10 @@
 // home_screen.dart
 import 'package:flutter/material.dart';
-import '../models/situation.dart';
+import '../../models/situation.dart';
 import 'item_list_screen.dart';
-import '../widgets/custom_list_tile.dart';
+import '../../widgets/custom_list_tile.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeView extends StatelessWidget {
   final List<Situation> situations = [
     Situation(
       name: '学校に行くとき',

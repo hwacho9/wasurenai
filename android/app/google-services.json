@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1086330927496",
+    "project_id": "wasurenai-113be",
+    "storage_bucket": "wasurenai-113be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086330927496:android:7f1666dc52d686fbc1e23d",
+        "android_client_info": {
+          "package_name": "com.wasurenai.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwVw-xQQjmH_AtSCYCtTWqWH3fvUw0pyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
