@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:wasurenai/screens/home_view.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import 'package:wasurenai/screens/edit_tiem_view.dart';
 import 'package:wasurenai/widgets/custom_card.dart';
@@ -114,7 +115,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
           CustomHeader(
             title: 'HOME',
             onBackPress: () {
-              Navigator.pop(context); // 이전 화면으로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeView(),
+                ),
+              );
             },
           ),
           Column(

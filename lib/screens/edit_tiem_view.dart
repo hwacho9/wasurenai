@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/screens/item_list_screen.dart';
 import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import 'package:wasurenai/widgets/add_modal.dart';
 import '../../models/situation.dart';
@@ -11,7 +12,8 @@ class EditItemView extends StatefulWidget {
   final Situation situation;
   final String userId;
 
-  EditItemView({required this.situation, required this.userId});
+  const EditItemView(
+      {super.key, required this.situation, required this.userId});
 
   @override
   _EditItemViewState createState() => _EditItemViewState();
@@ -42,7 +44,15 @@ class _EditItemViewState extends State<EditItemView> {
           CustomHeader(
             title: widget.situation.name,
             onBackPress: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ItemListScreen(
+                    situation: widget.situation,
+                    userId: widget.userId,
+                  ),
+                ),
+              );
             },
           ),
           // 리스트 콘텐츠
