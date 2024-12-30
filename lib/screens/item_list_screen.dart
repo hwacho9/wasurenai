@@ -1,41 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:provider/provider.dart';
 import '../../models/situation.dart';
+import '../../viewmodels/item_list_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
 
 class ItemListScreen extends StatefulWidget {
   final Situation situation;
+  final String userId;
 
-  ItemListScreen({required this.situation});
+  ItemListScreen({required this.situation, required this.userId});
 
   @override
   _ItemListScreenState createState() => _ItemListScreenState();
 }
 
 class _ItemListScreenState extends State<ItemListScreen> {
-  late List<Item> items;
+  late ItemListViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    items = List.from(widget.situation.items);
+
+    // ViewModel 초기화 및 데이터 로드
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel = Provider.of<ItemListViewModel>(context, listen: false);
+      viewModel.fetchItems(widget.userId, widget.situation.name);
+    });
   }
 
-  void _showItemSwiper() {
-    if (items.isEmpty) return;
+  // 카드 스와이퍼를 표시하는 함수
+  void _showItemSwiper(int index, ItemListViewModel viewModel) {
+    if (viewModel.items.isEmpty) return;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 1.0,
+          heightFactor: 0.8,
           child: CardSwiper(
-            cardsCount: items.length,
-            numberOfCardsDisplayed: items.length < 5 ? items.length : 5,
+            cardsCount: viewModel.items.length,
+            initialIndex: index,
+            numberOfCardsDisplayed:
+                viewModel.items.length < 5 ? viewModel.items.length : 5,
             cardBuilder:
                 (context, index, percentThresholdX, percentThresholdY) {
-              final item = items[index];
+              final item = viewModel.items[index];
               return Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -51,15 +62,18 @@ class _ItemListScreenState extends State<ItemListScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(item.name,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center),
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                           SizedBox(height: 10),
-                          Text(item.location,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.grey),
-                              textAlign: TextAlign.center),
+                          Text(
+                            item.location,
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
                           SizedBox(height: 20),
                         ],
                       ),
@@ -74,7 +88,49 @@ class _ItemListScreenState extends State<ItemListScreen> {
     );
   }
 
-  void _showAddItemModal() {
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<ItemListViewModel>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.situation.name,
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: viewModel.isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: viewModel.items.length,
+              itemBuilder: (context, index) {
+                final item = viewModel.items[index];
+                return CustomListTile(
+                  title: item.name,
+                  subtitle: item.location,
+                  isChecked: item.isChecked,
+                  onCheckedChange: (bool value) {
+                    setState(() {
+                      item.isChecked = value;
+                    });
+                  },
+                  onTap: () {
+                    _showItemSwiper(index, viewModel); // 클릭 시 스와이퍼 호출
+                  },
+                );
+              },
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddItemModal(context, viewModel);
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  // 아이템 추가 모달 표시
+  void _showAddItemModal(BuildContext context, ItemListViewModel viewModel) {
     String itemName = '';
     String itemLocation = '';
 
@@ -107,9 +163,10 @@ class _ItemListScreenState extends State<ItemListScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (itemName.isNotEmpty && itemLocation.isNotEmpty) {
-                    setState(() {
-                      items.add(Item(name: itemName, location: itemLocation));
-                    });
+                    final newItem =
+                        Item(name: itemName, location: itemLocation);
+                    viewModel.addItem(
+                        widget.userId, widget.situation.name, newItem);
                     Navigator.pop(context);
                   }
                 },
@@ -119,39 +176,6 @@ class _ItemListScreenState extends State<ItemListScreen> {
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.situation.name,
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
-          return CustomListTile(
-            title: item.name,
-            subtitle: item.location,
-            isChecked: item.isChecked,
-            onCheckedChange: (bool value) {
-              setState(() {
-                item.isChecked = value;
-              });
-            },
-            onTap: _showItemSwiper,
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddItemModal,
-        child: Icon(Icons.add),
-      ),
     );
   }
 }

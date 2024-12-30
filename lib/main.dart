@@ -6,6 +6,7 @@ import 'package:wasurenai/firebase_options.dart';
 import 'package:wasurenai/provider/auth_provider.dart';
 import 'package:wasurenai/splash_view.dart';
 import 'package:wasurenai/viewmodels/edit_situations_view_model.dart';
+import 'package:wasurenai/viewmodels/item_list_view_model.dart';
 import 'package:wasurenai/viewmodels/login_view_model.dart';
 import 'package:wasurenai/viewmodels/signup_view_model.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => SignupViewModel()),
         ChangeNotifierProvider(create: (_) => EditSituationsViewModel()),
+        ChangeNotifierProvider(create: (_) => ItemListViewModel()),
       ],
       child: MaterialApp(
         title: '물건 체크 앱',

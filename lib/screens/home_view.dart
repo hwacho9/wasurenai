@@ -11,6 +11,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    String? uid = user?.uid;
 
     if (user == null) {
       return Center(child: Text('로그인되어 있지 않습니다.'));
@@ -69,8 +70,10 @@ class HomeView extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ItemListScreen(situation: situation),
+                      builder: (context) => ItemListScreen(
+                        situation: situation,
+                        userId: uid!,
+                      ),
                     ),
                   );
                 },

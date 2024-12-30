@@ -5,6 +5,7 @@ import '../models/situation.dart';
 class SituationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// Firestore에서 모든 Situation 가져오기
   Future<List<Situation>> getSituations() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
@@ -18,18 +19,16 @@ class SituationService {
     return snapshot.docs.map((doc) {
       final data = doc.data();
       return Situation(
-        name: data['name'],
+        name: doc.id, // 도큐먼트 이름(situationName)을 name으로 사용
         items: (data['items'] as List<dynamic>)
-            .map((item) => Item(
-                  name: item['name'],
-                  location: item['location'],
-                ))
+            .map((item) => Item.fromJson(item))
             .toList(),
       );
     }).toList();
   }
 
-  Future<void> addSituation(String name) async {
+  /// Firestore에 새로운 Situation 추가하기
+  Future<void> addSituation(String situationName) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -37,25 +36,24 @@ class SituationService {
         .collection('Users')
         .doc(user.uid)
         .collection('situations')
-        .add({
-      'name': name,
-      'items': [],
+        .doc(situationName) // situationName을 도큐먼트 이름으로 사용
+        .set({
+      'name': situationName,
+      'items': [], // 초기에는 빈 items 리스트
     });
   }
 
-  Future<void> deleteSituation(String name) async {
+  /// Firestore에서 특정 Situation 삭제하기
+  Future<void> deleteSituation(String situationName) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final snapshot = await _firestore
+    final situationRef = _firestore
         .collection('Users')
         .doc(user.uid)
         .collection('situations')
-        .where('name', isEqualTo: name)
-        .get();
+        .doc(situationName);
 
-    for (var doc in snapshot.docs) {
-      await doc.reference.delete();
-    }
+    await situationRef.delete();
   }
 }
