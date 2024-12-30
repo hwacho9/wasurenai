@@ -1,6 +1,8 @@
+// home_screen.dart
 import 'package:flutter/material.dart';
-import 'models/situation.dart';
+import '../models/situation.dart';
 import 'item_list_screen.dart';
+import '../widgets/custom_list_tile.dart';
 
 class HomeScreen extends StatelessWidget {
   final List<Situation> situations = [
@@ -30,14 +32,16 @@ class HomeScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: situations.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(situations[index].name),
+          final situation = situations[index];
+          return CustomListTile(
+            title: situation.name,
+            subtitle: '', // 필요한 경우 상황에 맞는 설명 추가
+            showSwitch: false, // 스위치 대신 화살표 표시
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ItemListScreen(situation: situations[index]),
+                  builder: (context) => ItemListScreen(situation: situation),
                 ),
               );
             },
