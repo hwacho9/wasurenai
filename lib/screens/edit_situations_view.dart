@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import '../../viewmodels/edit_situations_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
@@ -47,7 +48,8 @@ class EditSituationsView extends StatelessWidget {
                               // 필요한 경우 상황 항목 클릭 동작 추가
                             },
                             trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete,
+                                  color: AppColors.lightRed),
                               onPressed: () {
                                 viewModel.deleteSituation(index);
                               },

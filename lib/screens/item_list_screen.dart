@@ -37,15 +37,14 @@ class _ItemListScreenState extends State<ItemListScreen> {
   }
 
   void _updateItemCheckedState(int index, bool isChecked) {
-    setState(() {
-      viewModel.updateItemState(index, isChecked);
-    });
+    // Firebase와 통신하여 체크 상태 업데이트
+    viewModel.updateItemCheckedState(
+        widget.userId, widget.situation.name, index, isChecked);
   }
 
   void _resetItems() {
-    setState(() {
-      viewModel.resetItems();
-    });
+    // Firebase와 통신하여 모든 체크 상태 초기화
+    viewModel.resetAllItems(widget.userId, widget.situation.name);
   }
 
   void _showItemSwiper(BuildContext context, int index) {
@@ -120,7 +119,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
           ),
           Column(
             children: [
-              const SizedBox(height: 200), // 헤더 아래로 내용 배
+              const SizedBox(height: 200), // 헤더 아래로 내용 배치
               CustomCard(
                 text: widget.situation.name,
                 onTap: () {},

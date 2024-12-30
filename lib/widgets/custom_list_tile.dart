@@ -45,7 +45,7 @@ class CustomListTile extends StatelessWidget {
             // InkWell for onTap event
             InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(50),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 16),

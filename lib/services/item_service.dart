@@ -105,4 +105,71 @@ class ItemService {
       }
     });
   }
+
+  Future<void> updateItemOrder(
+      String userId, String situationName, List<Item> items) async {
+    try {
+      // 아이템 리스트를 JSON으로 변환
+      final itemsJson = items.map((item) => item.toJson()).toList();
+
+      // Firestore에 저장
+      await _firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('situations')
+          .doc(situationName)
+          .update({'items': itemsJson});
+    } catch (e) {
+      throw Exception('Failed to update item order: $e');
+    }
+  }
+
+  Future<void> updateItemCheckedState(
+      String userId, String situationName, Item item) async {
+    try {
+      final situationRef = _firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('situations')
+          .doc(situationName);
+
+      final snapshot = await situationRef.get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        final items = (data['items'] as List<dynamic>)
+            .map((itemJson) => Item.fromJson(itemJson))
+            .toList();
+
+        final updatedItems = items.map((existingItem) {
+          if (existingItem.name == item.name) {
+            return item.toJson();
+          }
+          return existingItem.toJson();
+        }).toList();
+
+        await situationRef.update({'items': updatedItems});
+      }
+    } catch (e) {
+      throw Exception('Failed to update item checked state: $e');
+    }
+  }
+
+  Future<void> resetAllItems(
+      String userId, String situationName, List<Item> items) async {
+    try {
+      final situationRef = _firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('situations')
+          .doc(situationName);
+
+      final updatedItems = items
+          .map((item) => item.copyWith(isChecked: false).toJson())
+          .toList();
+
+      await situationRef.update({'items': updatedItems});
+    } catch (e) {
+      throw Exception('Failed to reset items: $e');
+    }
+  }
 }

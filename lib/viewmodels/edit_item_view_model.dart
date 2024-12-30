@@ -47,4 +47,13 @@ class EditItemViewModel extends ChangeNotifier {
       print('Error deleting item: $e');
     }
   }
+
+  void updateItemOrder(String userId, String situationName) async {
+    try {
+      await _itemService.updateItemOrder(userId, situationName, items);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to update item order: $e');
+    }
+  }
 }

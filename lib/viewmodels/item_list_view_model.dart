@@ -51,10 +51,32 @@ class ItemListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetItems() {
-    for (var item in _items) {
-      item.isChecked = false;
+  Future<void> updateItemCheckedState(
+      String userId, String situationName, int index, bool isChecked) async {
+    try {
+      _items[index].isChecked = isChecked;
+      notifyListeners();
+      // Firebase 업데이트
+      await _itemService.updateItemCheckedState(
+        userId,
+        situationName,
+        _items[index],
+      );
+    } catch (e) {
+      debugPrint('Failed to update item checked state: $e');
     }
-    notifyListeners();
+  }
+
+  Future<void> resetAllItems(String userId, String situationName) async {
+    try {
+      for (var item in _items) {
+        item.isChecked = false;
+      }
+      notifyListeners();
+      // Firebase 업데이트
+      await _itemService.resetAllItems(userId, situationName, _items);
+    } catch (e) {
+      debugPrint('Failed to reset items: $e');
+    }
   }
 }

@@ -43,4 +43,12 @@ class Item {
       isChecked: json['isChecked'] ?? false,
     );
   }
+
+  Item copyWith({bool? isChecked}) {
+    return Item(
+      name: name,
+      location: location,
+      isChecked: isChecked ?? this.isChecked,
+    );
+  }
 }
