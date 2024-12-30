@@ -92,17 +92,22 @@ class AddModal extends StatelessWidget {
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.lightRed, // 버튼 배경색
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(30), // 더 둥근 모서리
               ),
               padding: const EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 24,
+                vertical: 6, // 버튼 높이 증가
+                horizontal: 40, // 버튼 너비 증가
               ),
             ),
             child: Text(
               buttonText,
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(
+                fontSize: 15, // 글자 크기 약간 증가
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // 텍스트 색상을 흰색으로
+              ),
             ),
           ),
           const SizedBox(height: 50),
