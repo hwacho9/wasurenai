@@ -19,8 +19,8 @@ class CustomListTile extends StatelessWidget {
     this.showSwitch = true,
     this.trailing, // 추가된 trailing
     this.color,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class CustomListTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: color ?? Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(40),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -39,23 +39,50 @@ class CustomListTile extends StatelessWidget {
             ),
           ],
         ),
-        child: ListTile(
-          title: Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          subtitle: Text(
-            subtitle,
-            style: TextStyle(color: Colors.grey, fontSize: 14),
-          ),
-          trailing: trailing ??
-              (showSwitch
-                  ? Switch(
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Stack(
+              children: [
+                // Title in the center
+                Center(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                // Trailing widget or Switch on the right
+                if (trailing != null)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: trailing!,
+                  )
+                else if (showSwitch)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Switch(
                       value: isChecked,
                       onChanged: onCheckedChange,
-                    )
-                  : Icon(Icons.arrow_forward_ios, color: Colors.grey)),
-          onTap: onTap,
+                    ),
+                  )
+                else
+                  const Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Icon(Icons.arrow_forward_ios, color: Colors.black),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

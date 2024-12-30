@@ -66,7 +66,8 @@ class HomeView extends StatelessWidget {
                 ],
               ),
               // 리스트뷰
-              Expanded(
+              Flexible(
+                flex: 2, // 리스트뷰가 차지하는 비율 조정
                 child: StreamBuilder<List<Situation>>(
                   stream: viewModel.fetchSituations(user.uid),
                   builder: (context, snapshot) {
@@ -111,7 +112,8 @@ class HomeView extends StatelessWidget {
               ),
               // 하단 버튼
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, bottom: 60, top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -120,7 +122,7 @@ class HomeView extends StatelessWidget {
                         // 설정 버튼 동작
                       },
                       icon: const Icon(Icons.settings),
-                      label: const Text('설정'),
+                      label: const Text('設定'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
                         foregroundColor: Colors.black,
@@ -138,7 +140,7 @@ class HomeView extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.edit),
-                      label: const Text('편집'),
+                      label: const Text('編集'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey[300],
                         foregroundColor: Colors.black,
