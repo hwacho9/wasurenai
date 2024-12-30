@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/edit_situations_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
+import '../../widgets/custom_header.dart';
 
 class EditSituationsView extends StatelessWidget {
   @override
@@ -16,32 +17,45 @@ class EditSituationsView extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('편집')),
-      body: viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : viewModel.situations.isEmpty
-              ? const Center(child: Text('리스트가 비어 있습니다.'))
-              : ListView.builder(
-                  itemCount: viewModel.situations.length,
-                  itemBuilder: (context, index) {
-                    final situation = viewModel.situations[index];
+      body: Stack(
+        children: [
+          // 상단 헤더
+          CustomHeader(
+            title: 'HOME',
+            onBackPress: () {
+              Navigator.pop(context); // 뒤로가기 동작
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 150), // 헤더 아래로 내용 배치
+            child: viewModel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : viewModel.situations.isEmpty
+                    ? const Center(child: Text('리스트가 비어 있습니다.'))
+                    : ListView.builder(
+                        itemCount: viewModel.situations.length,
+                        itemBuilder: (context, index) {
+                          final situation = viewModel.situations[index];
 
-                    return CustomListTile(
-                      title: situation.name,
-                      subtitle: '', // 상황에 맞게 설명 추가 가능
-                      showSwitch: false, // 스위치 비활성화
-                      onTap: () {
-                        // 필요한 경우 상황 항목 클릭 동작 추가
-                      },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          viewModel.deleteSituation(index);
+                          return CustomListTile(
+                            title: situation.name,
+                            subtitle: '', // 상황에 맞게 설명 추가 가능
+                            showSwitch: false, // 스위치 비활성화
+                            onTap: () {
+                              // 필요한 경우 상황 항목 클릭 동작 추가
+                            },
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                viewModel.deleteSituation(index);
+                              },
+                            ),
+                          );
                         },
                       ),
-                    );
-                  },
-                ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddSituationModal(context, viewModel);

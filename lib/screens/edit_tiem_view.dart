@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/edit_item_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
+import '../../widgets/custom_header.dart';
 import 'package:provider/provider.dart';
 
 class EditItemView extends StatefulWidget {
@@ -33,35 +34,49 @@ class _EditItemViewState extends State<EditItemView> {
     final viewModel = Provider.of<EditItemViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.situation.name} 편집')),
-      body: viewModel.isLoading
-          ? Center(child: CircularProgressIndicator())
-          : viewModel.items.isEmpty
-              ? Center(child: Text('리스트가 비어 있습니다.'))
-              : ListView.builder(
-                  itemCount: viewModel.items.length,
-                  itemBuilder: (context, index) {
-                    final item = viewModel.items[index];
-                    return CustomListTile(
-                      title: item.name,
-                      subtitle: item.location,
-                      showSwitch: false,
-                      onTap: () {},
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          viewModel.deleteItem(
-                              widget.userId, widget.situation.name, item);
+      body: Stack(
+        children: [
+          // CustomHeader 추가
+          CustomHeader(
+            title: widget.situation.name,
+            onBackPress: () {
+              Navigator.pop(context);
+            },
+          ),
+          // 리스트 콘텐츠
+          Padding(
+            padding: const EdgeInsets.only(top: 150), // 헤더 아래로 내용 배치
+            child: viewModel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : viewModel.items.isEmpty
+                    ? const Center(child: Text('리스트가 비어 있습니다.'))
+                    : ListView.builder(
+                        itemCount: viewModel.items.length,
+                        itemBuilder: (context, index) {
+                          final item = viewModel.items[index];
+                          return CustomListTile(
+                            title: item.name,
+                            subtitle: item.location,
+                            showSwitch: false,
+                            onTap: () {},
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                viewModel.deleteItem(
+                                    widget.userId, widget.situation.name, item);
+                              },
+                            ),
+                          );
                         },
                       ),
-                    );
-                  },
-                ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddItemModal(context, viewModel);
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -84,18 +99,18 @@ class _EditItemViewState extends State<EditItemView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Item Name'),
+                decoration: const InputDecoration(labelText: 'Item Name'),
                 onChanged: (value) {
                   itemName = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Item Location'),
+                decoration: const InputDecoration(labelText: 'Item Location'),
                 onChanged: (value) {
                   itemLocation = value;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (itemName.isNotEmpty && itemLocation.isNotEmpty) {
@@ -104,7 +119,7 @@ class _EditItemViewState extends State<EditItemView> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text('Add Item'),
+                child: const Text('Add Item'),
               ),
             ],
           ),
