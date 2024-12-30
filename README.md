@@ -1,6 +1,6 @@
-# wasurenai
+# MOTTA - (wasurenai)
 
-A new Flutter project.
+![180](https://github.com/user-attachments/assets/bfb35f7b-5028-41bf-ab87-c126503cb416)
 
 ## Getting Started
 
