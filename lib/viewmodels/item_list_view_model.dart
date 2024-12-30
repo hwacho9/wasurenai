@@ -52,4 +52,16 @@ class ItemListViewModel extends ChangeNotifier {
       throw Exception('Failed to add item: $e');
     }
   }
+
+  void updateItemState(int index, bool isChecked) {
+    _items[index].isChecked = isChecked;
+    notifyListeners();
+  }
+
+  void resetItems() {
+    for (var item in _items) {
+      item.isChecked = false;
+    }
+    notifyListeners();
+  }
 }

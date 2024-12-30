@@ -18,38 +18,50 @@ class ItemListScreen extends StatefulWidget {
 }
 
 class _ItemListScreenState extends State<ItemListScreen> {
-  late List<Item> items;
+  late List<Item> localItems;
 
   @override
   void initState() {
     super.initState();
-    // 초기화: 상황의 아이템 리스트를 로컬에 저장
-    items = List.from(widget.situation.items);
+    // 로컬 상태 초기화
+    localItems = List.from(widget.situation.items);
   }
 
   void _updateItemCheckedState(int index, bool isChecked) {
     setState(() {
-      items[index].isChecked = isChecked;
+      localItems[index].isChecked = isChecked;
     });
   }
 
-  // 카드 스와이퍼를 표시하는 함수
+  void _resetItems() {
+    setState(() {
+      for (var item in localItems) {
+        item.isChecked = false;
+      }
+    });
+  }
+
   void _showItemSwiper(BuildContext context, int index) {
-    if (items.isEmpty) return;
+    if (localItems.isEmpty) return;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
+        if (localItems.isEmpty) {
+          return const Center(child: Text('No items available'));
+        }
+
         return FractionallySizedBox(
           heightFactor: 0.8,
           child: CardSwiper(
-            cardsCount: items.length,
+            cardsCount: localItems.length,
             initialIndex: index,
-            numberOfCardsDisplayed: items.length < 5 ? items.length : 5,
+            numberOfCardsDisplayed:
+                localItems.length < 5 ? localItems.length : 5,
             cardBuilder:
                 (context, index, percentThresholdX, percentThresholdY) {
-              final item = items[index];
+              final item = localItems[index];
               return Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -107,12 +119,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
             children: [
               const SizedBox(height: 150), // 헤더 높이 조정
               Expanded(
-                child: items.isEmpty
+                child: localItems.isEmpty
                     ? const Center(child: Text('リストが空です。'))
                     : ListView.builder(
-                        itemCount: items.length,
+                        itemCount: localItems.length,
                         itemBuilder: (context, index) {
-                          final item = items[index];
+                          final item = localItems[index];
                           return CustomListTile(
                             title: item.name,
                             subtitle: item.location,
@@ -121,7 +133,8 @@ class _ItemListScreenState extends State<ItemListScreen> {
                               _updateItemCheckedState(index, value);
                             },
                             onTap: () {
-                              _showItemSwiper(context, index);
+                              _showItemSwiper(
+                                  context, index); // 클릭 시 카드 스와이퍼 표시
                             },
                             showSwitch: true,
                           );
@@ -136,9 +149,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                 editForegroundColor: Colors.black, // 편집 버튼 텍스트 색
                 settingsLabel: 'リセット',
                 settingsIcon: Icons.restart_alt,
-                onPressed: () {
-                  // 설정 버튼 동작
-                },
+                onPressed: _resetItems, // 리셋 버튼 동작
                 editLabel: '編集',
                 editIcon: Icons.edit,
                 onEditPressed: () {
