@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
+import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/home_view_model.dart';
 import 'edit_situations_view.dart';
@@ -12,11 +13,10 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-
     final viewModel = Provider.of<HomeViewModel>(context);
 
     if (user == null) {
-      return const Center(child: Text('로그인되어 있지 않습니다.'));
+      return const Center(child: Text('ログインされていません'));
     }
 
     return Scaffold(
@@ -36,7 +36,7 @@ class HomeView extends StatelessWidget {
           ),
           Column(
             children: [
-              const SizedBox(height: 150), // 상태바 높이 조정
+              const SizedBox(height: 150),
               // 상단 텍스트와 장식
               const Column(
                 children: [
@@ -67,7 +67,7 @@ class HomeView extends StatelessWidget {
               ),
               // 리스트뷰
               Flexible(
-                flex: 2, // 리스트뷰가 차지하는 비율 조정
+                flex: 2,
                 child: StreamBuilder<List<Situation>>(
                   stream: viewModel.fetchSituations(user.uid),
                   builder: (context, snapshot) {
@@ -110,48 +110,19 @@ class HomeView extends StatelessWidget {
                   },
                 ),
               ),
-              // 하단 버튼
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 16, right: 16, bottom: 60, top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // 설정 버튼 동작
-                      },
-                      icon: const Icon(Icons.settings),
-                      label: const Text('設定'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditSituationsView()),
-                        );
-                      },
-                      icon: const Icon(Icons.edit),
-                      label: const Text('編集'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // 재사용 가능한 하단 버튼 사용
+              ReusableButtons(
+                settingsLabel: '設定',
+                settingsIcon: Icons.settings,
+                onPressed: () {
+                  // 설정 버튼 클릭 동작
+                },
+                editLabel: '編集',
+                editIcon: Icons.edit,
+                onEditPressed: () {
+                  // 편집 버튼 클릭 동작
+                },
+              )
             ],
           ),
         ],
