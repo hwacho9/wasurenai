@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/screens/item_list_screen.dart';
 import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import 'package:wasurenai/widgets/add_modal.dart';
@@ -72,7 +73,8 @@ class _EditItemViewState extends State<EditItemView> {
                             showSwitch: false,
                             onTap: () {},
                             trailing: IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete,
+                                  color: AppColors.lightRed),
                               onPressed: () {
                                 viewModel.deleteItem(
                                     widget.userId, widget.situation.name, item);
