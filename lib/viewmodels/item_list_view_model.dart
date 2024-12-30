@@ -11,13 +11,6 @@ class ItemListViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   final ItemService _itemService = ItemService();
-  Stream<List<Item>>? _itemStream;
-  Stream<List<Item>>? get itemStream => _itemStream;
-
-  void listenToItems(String userId, String situationName) {
-    _itemStream = _itemService.listenToItems(userId, situationName);
-    notifyListeners();
-  }
 
   void setSituation(String situationName) {
     if (_currentSituationName != situationName) {

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import 'package:wasurenai/screens/edit_tiem_view.dart';
+import 'package:wasurenai/widgets/custom_card.dart';
 import '../../models/situation.dart';
+import '../../viewmodels/item_list_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
 import '../../widgets/custom_header.dart';
 
@@ -10,58 +13,58 @@ class ItemListScreen extends StatefulWidget {
   final Situation situation;
   final String userId;
 
-  const ItemListScreen(
-      {super.key, required this.situation, required this.userId});
+  const ItemListScreen({
+    Key? key,
+    required this.situation,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   _ItemListScreenState createState() => _ItemListScreenState();
 }
 
 class _ItemListScreenState extends State<ItemListScreen> {
-  late List<Item> localItems;
+  late ItemListViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    // 로컬 상태 초기화
-    localItems = List.from(widget.situation.items);
+    // ViewModel 초기화 및 데이터 로드
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel = Provider.of<ItemListViewModel>(context, listen: false);
+      viewModel.fetchItems(widget.userId, widget.situation.name);
+    });
   }
 
   void _updateItemCheckedState(int index, bool isChecked) {
     setState(() {
-      localItems[index].isChecked = isChecked;
+      viewModel.updateItemState(index, isChecked);
     });
   }
 
   void _resetItems() {
     setState(() {
-      for (var item in localItems) {
-        item.isChecked = false;
-      }
+      viewModel.resetItems();
     });
   }
 
   void _showItemSwiper(BuildContext context, int index) {
-    if (localItems.isEmpty) return;
+    if (viewModel.items.isEmpty) return;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        if (localItems.isEmpty) {
-          return const Center(child: Text('No items available'));
-        }
-
         return FractionallySizedBox(
           heightFactor: 0.8,
           child: CardSwiper(
-            cardsCount: localItems.length,
+            cardsCount: viewModel.items.length,
             initialIndex: index,
             numberOfCardsDisplayed:
-                localItems.length < 5 ? localItems.length : 5,
+                viewModel.items.length < 5 ? viewModel.items.length : 5,
             cardBuilder:
                 (context, index, percentThresholdX, percentThresholdY) {
-              final item = localItems[index];
+              final item = viewModel.items[index];
               return Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -110,61 +113,82 @@ class _ItemListScreenState extends State<ItemListScreen> {
         children: [
           // 상단 헤더
           CustomHeader(
-            title: widget.situation.name,
+            title: 'HOME',
             onBackPress: () {
               Navigator.pop(context); // 이전 화면으로 이동
             },
           ),
           Column(
             children: [
-              const SizedBox(height: 150), // 헤더 높이 조정
+              const SizedBox(height: 200), // 헤더 아래로 내용 배
+              CustomCard(
+                text: widget.situation.name,
+                onTap: () {},
+              ),
+              const SizedBox(height: 25),
               Expanded(
-                child: localItems.isEmpty
-                    ? const Center(child: Text('リストが空です。'))
-                    : ListView.builder(
-                        itemCount: localItems.length,
-                        itemBuilder: (context, index) {
-                          final item = localItems[index];
-                          return CustomListTile(
-                            title: item.name,
-                            subtitle: item.location,
-                            isChecked: item.isChecked,
-                            onCheckedChange: (bool value) {
-                              _updateItemCheckedState(index, value);
-                            },
-                            onTap: () {
-                              _showItemSwiper(
-                                  context, index); // 클릭 시 카드 스와이퍼 표시
-                            },
-                            showSwitch: true,
-                          );
-                        },
-                      ),
+                child: Consumer<ItemListViewModel>(
+                  builder: (context, viewModel, _) {
+                    if (viewModel.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (viewModel.items.isEmpty) {
+                      return const Center(child: Text('リストが空です。'));
+                    }
+
+                    return ListView.builder(
+                      padding:
+                          const EdgeInsets.only(bottom: 100), // 버튼 영역과 겹치지 않게
+                      itemCount: viewModel.items.length,
+                      itemBuilder: (context, index) {
+                        final item = viewModel.items[index];
+                        return CustomListTile(
+                          title: item.name,
+                          subtitle: item.location,
+                          isChecked: item.isChecked,
+                          onCheckedChange: (bool value) {
+                            _updateItemCheckedState(index, value);
+                          },
+                          onTap: () {
+                            _showItemSwiper(context, index);
+                          },
+                          showSwitch: true,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-              // 하단 버튼
-              ReusableButtons(
-                settingsBackgroundColor: Colors.white, // 설정 버튼 배경색
-                settingsForegroundColor: Colors.black, // 설정 버튼 텍스트 색
-                editBackgroundColor: Colors.white, // 편집 버튼 배경색
-                editForegroundColor: Colors.black, // 편집 버튼 텍스트 색
-                settingsLabel: 'リセット',
-                settingsIcon: Icons.restart_alt,
-                onPressed: _resetItems, // 리셋 버튼 동작
-                editLabel: '編集',
-                editIcon: Icons.edit,
-                onEditPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditItemView(
-                        situation: widget.situation,
-                        userId: widget.userId,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              // 하단 버튼 위에 공간 추가
+              const SizedBox(height: 130), // ReusableButtons 영역 확보
             ],
+          ),
+          // 하단 버튼
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ReusableButtons(
+              settingsBackgroundColor: Colors.white,
+              settingsForegroundColor: Colors.black,
+              editBackgroundColor: Colors.white,
+              editForegroundColor: Colors.black,
+              settingsLabel: 'リセット',
+              settingsIcon: Icons.restart_alt,
+              onPressed: _resetItems,
+              editLabel: '編集',
+              editIcon: Icons.edit,
+              onEditPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditItemView(
+                      situation: widget.situation,
+                      userId: widget.userId,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
