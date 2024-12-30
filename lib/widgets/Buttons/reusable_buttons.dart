@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/data/app_colors.dart';
 
 class ReusableButtons extends StatelessWidget {
   final String settingsLabel;
@@ -44,7 +45,8 @@ class ReusableButtons extends StatelessWidget {
             ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              backgroundColor: settingsBackgroundColor ?? Colors.grey[300],
+              backgroundColor:
+                  settingsBackgroundColor ?? AppColors.scaffoldBackground,
               foregroundColor: settingsForegroundColor ?? Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16), // 버튼 모서리 둥글게
@@ -60,7 +62,8 @@ class ReusableButtons extends StatelessWidget {
             ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              backgroundColor: editBackgroundColor ?? Colors.grey[300],
+              backgroundColor:
+                  editBackgroundColor ?? AppColors.scaffoldBackground,
               foregroundColor: editForegroundColor ?? Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16), // 버튼 모서리 둥글게
