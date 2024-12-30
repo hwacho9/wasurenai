@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wasurenai/home.dart';
+import 'package:wasurenai/data/colors.dart';
+import 'package:wasurenai/screens/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,11 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '물건 체크 앱',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        // #D0C3B4
-        scaffoldBackgroundColor: Color.fromARGB(255, 227, 224, 221),
-        appBarTheme: AppBarTheme(
-          color: Color.fromARGB(255, 209, 95, 104),
+        primarySwatch: AppColors.primarySwatch,
+        scaffoldBackgroundColor: AppColors.scaffoldBackground,
+        appBarTheme: const AppBarTheme(
+          color: AppColors.appBarBackground,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
