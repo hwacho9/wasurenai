@@ -8,6 +8,7 @@ class CustomListTile extends StatelessWidget {
   final VoidCallback onTap;
   final bool showSwitch;
   final Widget? trailing; // trailing 매개변수 추가
+  final Color? color;
 
   const CustomListTile({
     required this.title,
@@ -17,6 +18,7 @@ class CustomListTile extends StatelessWidget {
     required this.onTap,
     this.showSwitch = true,
     this.trailing, // 추가된 trailing
+    this.color,
     Key? key,
   }) : super(key: key);
 
@@ -26,7 +28,7 @@ class CustomListTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: color ?? Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(

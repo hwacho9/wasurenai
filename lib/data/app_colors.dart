@@ -4,6 +4,7 @@ class AppColors {
   static const primarySwatch = Colors.blue;
   static const scaffoldBackground = Color.fromARGB(255, 222, 216, 209);
   static const appBarBackground = Color.fromARGB(255, 222, 216, 209);
+  static const Color lightRed = Color.fromARGB(255, 229, 151, 151);
   static const cardBackground = Colors.white;
   static const cardShadow =
       Color.fromRGBO(0, 0, 0, 0.2); // Adjust opacity as needed
