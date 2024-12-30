@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/models/situation.dart';
 
 void showItemSwiper({
   required BuildContext context,
   required List<Item> items,
   required int initialIndex,
+  required void Function(int index, bool isChecked) updateItemCheckedState,
 }) {
   if (items.isEmpty) return;
 
   showModalBottomSheet(
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.scaffoldBackground,
     context: context,
     isScrollControlled: true,
     builder: (BuildContext context) {
@@ -20,6 +22,43 @@ void showItemSwiper({
           cardsCount: items.length,
           initialIndex: initialIndex,
           numberOfCardsDisplayed: items.length,
+          onSwipe: (int? previousIndex, int? currentIndex,
+              CardSwiperDirection direction) {
+            if (currentIndex != null && currentIndex < items.length) {
+              final swipedItem = items[previousIndex!];
+
+              // isChecked를 true로 업데이트
+              updateItemCheckedState(previousIndex, true);
+
+              // 디버그 메세지 출력
+              debugPrint(
+                  'Swiped item "${swipedItem.name}" isChecked set to true');
+              debugPrint(
+                  'Swiped from index $previousIndex to $currentIndex in direction $direction');
+            }
+            return true; // 스와이프 허용
+          },
+          onEnd: () {
+            debugPrint('You have reached the end of the cards.');
+
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('End of Cards'),
+                  content: const Text('You have reached the last card.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // 다이얼로그 닫기
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
           cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
             final item = items[index];
             return Center(

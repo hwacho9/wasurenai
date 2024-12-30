@@ -30,7 +30,6 @@ class _ItemListScreenState extends State<ItemListScreen> {
   @override
   void initState() {
     super.initState();
-    // ViewModel 초기화 및 데이터 로드
     WidgetsBinding.instance.addPostFrameCallback((_) {
       viewModel = Provider.of<ItemListViewModel>(context, listen: false);
       viewModel.fetchItems(widget.userId, widget.situation.name);
@@ -44,6 +43,17 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   void _resetItems() {
     viewModel.resetAllItems(widget.userId, widget.situation.name);
+  }
+
+  void _showItemSwiper(BuildContext context, int index) {
+    if (viewModel.items.isEmpty) return;
+
+    showItemSwiper(
+      context: context,
+      items: viewModel.items,
+      initialIndex: index,
+      updateItemCheckedState: _updateItemCheckedState,
+    );
   }
 
   @override
@@ -86,38 +96,17 @@ class _ItemListScreenState extends State<ItemListScreen> {
                       itemCount: viewModel.items.length,
                       itemBuilder: (context, index) {
                         final item = viewModel.items[index];
-                        return Dismissible(
-                          key: ValueKey(item.name),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) {
-                            _updateItemCheckedState(index, !item.isChecked);
+                        return CustomListTile(
+                          title: item.name,
+                          subtitle: item.location,
+                          isChecked: item.isChecked,
+                          onCheckedChange: (bool value) {
+                            _updateItemCheckedState(index, value);
                           },
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20),
-                            color: Colors.green,
-                            child: const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                          child: CustomListTile(
-                            title: item.name,
-                            subtitle: item.location,
-                            isChecked: item.isChecked,
-                            onCheckedChange: (bool value) {
-                              _updateItemCheckedState(index, value);
-                            },
-                            onTap: () {
-                              showItemSwiper(
-                                context: context,
-                                items: viewModel.items,
-                                initialIndex: index,
-                              );
-                            },
-                            showSwitch: true,
-                          ),
+                          onTap: () {
+                            _showItemSwiper(context, index);
+                          },
+                          showSwitch: true,
                         );
                       },
                     );
