@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/screens/setting_view.dart';
+import 'package:wasurenai/welcome_view.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/home_view_model.dart';
@@ -14,10 +15,14 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
     final viewModel = Provider.of<HomeViewModel>(context);
 
     if (user == null) {
-      return const Center(child: Text('ログインされていません'));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => WelcomeView()),
+      );
     }
 
     return Scaffold(
@@ -70,7 +75,7 @@ class HomeView extends StatelessWidget {
               Flexible(
                 flex: 2,
                 child: StreamBuilder<List<Situation>>(
-                  stream: viewModel.fetchSituations(user.uid),
+                  stream: viewModel.fetchSituations(uid!),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -99,7 +104,7 @@ class HomeView extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => ItemListScreen(
                                     situation: situation,
-                                    userId: user.uid,
+                                    userId: uid,
                                   ),
                                 ),
                               );
