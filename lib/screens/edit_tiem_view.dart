@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
+import 'package:wasurenai/widgets/add_modal.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/edit_item_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
@@ -83,47 +84,30 @@ class _EditItemViewState extends State<EditItemView> {
   }
 
   void _showAddItemModal(BuildContext context, EditItemViewModel viewModel) {
-    String itemName = '';
-    String itemLocation = '';
-
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 16,
-              right: 16,
-              top: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Item Name'),
-                onChanged: (value) {
-                  itemName = value;
-                },
-              ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Item Location'),
-                onChanged: (value) {
-                  itemLocation = value;
-                },
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  if (itemName.isNotEmpty && itemLocation.isNotEmpty) {
-                    viewModel.addItem(widget.userId, widget.situation.name,
-                        Item(name: itemName, location: itemLocation));
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add Item'),
-              ),
-            ],
-          ),
+        return AddModal(
+          title: 'アイテムを追加',
+          labels: const ['アイテムの名前', '忘れた時のための "お助けメモ"'],
+          hints: const ['名前を入力してください', '場所などのメモを入力してください'],
+          buttonText: '追加する',
+          onSubmit: (values) {
+            final itemName = values[0];
+            final itemMemo = values[1];
+            viewModel.addItem(
+              widget.userId,
+              widget.situation.name,
+              Item(name: itemName, location: itemMemo),
+            );
+          },
         );
       },
     );

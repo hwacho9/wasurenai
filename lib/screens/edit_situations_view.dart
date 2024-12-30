@@ -4,6 +4,7 @@ import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import '../../viewmodels/edit_situations_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
 import '../../widgets/custom_header.dart';
+import '../../widgets/add_modal.dart';
 
 class EditSituationsView extends StatelessWidget {
   @override
@@ -32,7 +33,7 @@ class EditSituationsView extends StatelessWidget {
             child: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.situations.isEmpty
-                    ? const Center(child: Text('리스트가 비어 있습니다.'))
+                    ? const Center(child: Text('リストが空です。'))
                     : ListView.builder(
                         itemCount: viewModel.situations.length,
                         itemBuilder: (context, index) {
@@ -68,32 +69,22 @@ class EditSituationsView extends StatelessWidget {
 
   void _showAddSituationModal(
       BuildContext context, EditSituationsViewModel viewModel) {
-    String situationName = '';
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Situation Name'),
-                onChanged: (value) {
-                  situationName = value;
-                },
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (situationName.isNotEmpty) {
-                    viewModel.addSituation(situationName);
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('추가'),
-              ),
-            ],
-          ),
+        return AddModal(
+          title: '新しい状況を追加',
+          labels: const ['行く先を追加しよう'],
+          hints: const ['行く先を入力してください'],
+          buttonText: '追加',
+          onSubmit: (values) {
+            final situationName = values[0];
+            if (situationName.isNotEmpty) {
+              viewModel.addSituation(situationName);
+            }
+          },
         );
       },
     );
