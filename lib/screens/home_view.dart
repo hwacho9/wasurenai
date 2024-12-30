@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:wasurenai/provider/auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wasurenai/screens/edit_situations_view.dart';
 import 'package:wasurenai/screens/item_list_screen.dart';
-import 'package:wasurenai/splash_view.dart';
 import '../../models/situation.dart';
 import '../../widgets/custom_list_tile.dart';
 
 class HomeView extends StatelessWidget {
-  final List<Situation> situations = [
-    Situation(
-      name: '学校に行くとき',
-      items: [
-        Item(name: '本', location: '机の上'),
-        Item(name: '鍵', location: '玄関'),
-        Item(name: 'マックブック', location: '机の上'),
-      ],
-    ),
-    Situation(
-      name: '운동하러 갈 때',
-      items: [
-        Item(name: '운동화', location: '신발장'),
-        Item(name: '물병', location: '부엌'),
-      ],
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return Center(child: Text('로그인되어 있지 않습니다.'));
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -35,75 +24,70 @@ class HomeView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
-              final authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
-              await authProvider.signOut();
-
-              // 로그아웃 후 SplashView로 이동
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => SplashView()),
-                (route) => false, // 이전 경로 제거
-              );
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/splash');
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: situations.length,
-        itemBuilder: (context, index) {
-          final situation = situations[index];
-          return CustomListTile(
-            title: situation.name,
-            subtitle: '', // 필요한 경우 상황에 맞는 설명 추가
-            showSwitch: false, // 스위치 대신 화살표 표시
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemListScreen(situation: situation),
-                ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .collection('situations')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('리스트가 비어 있습니다.'));
+          }
+
+          final situations = snapshot.data!.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return Situation(
+              name: data['name'],
+              items: (data['items'] as List<dynamic>)
+                  .map((item) => Item(
+                        name: item['name'],
+                        location: item['location'],
+                      ))
+                  .toList(),
+            );
+          }).toList();
+
+          return ListView.builder(
+            itemCount: situations.length,
+            itemBuilder: (context, index) {
+              final situation = situations[index];
+              return CustomListTile(
+                title: situation.name,
+                subtitle: '',
+                showSwitch: false,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ItemListScreen(situation: situation),
+                    ),
+                  );
+                },
               );
             },
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditSituationsView()),
+          );
+        },
+        child: Icon(Icons.edit),
+      ),
     );
-  }
-}
-
-class PageCornerPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    // 회색 삼각형
-    final paintGray = Paint()
-      ..color = Color.fromARGB(255, 222, 216, 209)
-      ..style = PaintingStyle.fill;
-
-    final pathGray = Path();
-    pathGray.moveTo(0, 0); // 시작점
-    pathGray.lineTo(size.width, 0); // 위쪽 경계선
-    pathGray.lineTo(0, size.height); // 왼쪽 경계선
-    pathGray.close(); // 삼각형 닫기
-
-    canvas.drawPath(pathGray, paintGray);
-
-    // 빨간색 삼각형
-    final paintRed = Paint()
-      ..color = Color.fromARGB(255, 229, 151, 151)
-      ..style = PaintingStyle.fill;
-
-    final pathRed = Path();
-    pathRed.moveTo(size.width, size.height); // 오른쪽 아래
-    pathRed.lineTo(size.width, size.height - size.height); // 중간 높이
-    pathRed.lineTo(size.width - size.width, size.height); // 중간 너비
-    pathRed.close(); // 삼각형 닫기
-
-    canvas.drawPath(pathRed, paintRed);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

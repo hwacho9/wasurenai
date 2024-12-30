@@ -1,4 +1,3 @@
-// item_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../../models/situation.dart';
@@ -75,6 +74,54 @@ class _ItemListScreenState extends State<ItemListScreen> {
     );
   }
 
+  void _showAddItemModal() {
+    String itemName = '';
+    String itemLocation = '';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 16,
+              right: 16,
+              top: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Item Name'),
+                onChanged: (value) {
+                  itemName = value;
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Item Location'),
+                onChanged: (value) {
+                  itemLocation = value;
+                },
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (itemName.isNotEmpty && itemLocation.isNotEmpty) {
+                    setState(() {
+                      items.add(Item(name: itemName, location: itemLocation));
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text('Add Item'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +147,10 @@ class _ItemListScreenState extends State<ItemListScreen> {
             onTap: _showItemSwiper,
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddItemModal,
+        child: Icon(Icons.add),
       ),
     );
   }

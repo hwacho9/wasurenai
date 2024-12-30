@@ -1,4 +1,3 @@
-// custom_list_tile.dart
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -8,6 +7,7 @@ class CustomListTile extends StatelessWidget {
   final ValueChanged<bool>? onCheckedChange;
   final VoidCallback onTap;
   final bool showSwitch;
+  final Widget? trailing; // trailing 매개변수 추가
 
   const CustomListTile({
     required this.title,
@@ -16,6 +16,7 @@ class CustomListTile extends StatelessWidget {
     this.onCheckedChange,
     required this.onTap,
     this.showSwitch = true,
+    this.trailing, // 추가된 trailing
     Key? key,
   }) : super(key: key);
 
@@ -45,12 +46,13 @@ class CustomListTile extends StatelessWidget {
             subtitle,
             style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
-          trailing: showSwitch
-              ? Switch(
-                  value: isChecked,
-                  onChanged: onCheckedChange,
-                )
-              : Icon(Icons.arrow_forward_ios, color: Colors.grey),
+          trailing: trailing ??
+              (showSwitch
+                  ? Switch(
+                      value: isChecked,
+                      onChanged: onCheckedChange,
+                    )
+                  : Icon(Icons.arrow_forward_ios, color: Colors.grey)),
           onTap: onTap,
         ),
       ),
