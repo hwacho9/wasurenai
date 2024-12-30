@@ -32,3 +32,8 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+#firebase options
+firebase.json
+firebase-debug.log
+/Users/chosunghwa/Desktop/workspace/wasurenai/lib/firebase_options.dart
