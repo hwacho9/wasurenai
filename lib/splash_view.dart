@@ -12,7 +12,18 @@ class SplashView extends StatelessWidget {
         child: FutureBuilder(
           future: _navigateBasedOnAuth(context),
           builder: (context, snapshot) {
-            return CircularProgressIndicator();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/icon.png', // 로컬 이미지 경로
+                  width: 150, // 원하는 크기로 설정
+                  height: 150,
+                ),
+                SizedBox(height: 20),
+                CircularProgressIndicator(),
+              ],
+            );
           },
         ),
       ),

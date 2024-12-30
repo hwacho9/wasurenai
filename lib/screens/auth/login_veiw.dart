@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/screens/home_view.dart';
 import 'package:wasurenai/viewmodels/login_view_model.dart';
+import 'package:wasurenai/widgets/Buttons/RectangleButton.dart';
 import 'signup_view.dart';
 
 class LoginView extends StatelessWidget {
@@ -25,7 +26,8 @@ class LoginView extends StatelessWidget {
               onChanged: (value) => viewModel.password = value,
             ),
             SizedBox(height: 16),
-            ElevatedButton(
+            RectangleButton(
+              text: 'Login',
               onPressed: () async {
                 await viewModel.login();
                 if (viewModel.errorMessage == null) {
@@ -36,20 +38,17 @@ class LoginView extends StatelessWidget {
                   );
                 }
               },
-              child: Text('Login'),
+              color: Colors.white,
+              textColor: Colors.black,
             ),
             if (viewModel.errorMessage != null)
-              Text(viewModel.errorMessage!,
-                  style: TextStyle(color: Colors.red)),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignupView()),
-                );
-              },
-              child: Text('Create an Account'),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  viewModel.errorMessage!,
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
           ],
         ),
       ),

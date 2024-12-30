@@ -29,6 +29,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('상황별 체크리스트'),
         actions: [
           IconButton(
