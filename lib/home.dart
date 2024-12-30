@@ -5,10 +5,11 @@ import 'item_list_screen.dart';
 class HomeScreen extends StatelessWidget {
   final List<Situation> situations = [
     Situation(
-      name: '학교 갈 때',
+      name: '学校に行くとき',
       items: [
-        Item(name: '책', location: '책상 위'),
-        Item(name: '노트북', location: '가방 안'),
+        Item(name: '本', location: '机の上'),
+        Item(name: '鍵', location: '玄関'),
+        Item(name: 'マックブック', location: '机の上'),
       ],
     ),
     Situation(

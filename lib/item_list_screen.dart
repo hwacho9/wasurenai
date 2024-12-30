@@ -34,7 +34,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
           heightFactor: 1.0,
           child: CardSwiper(
             cardsCount: items.length,
-            numberOfCardsDisplayed: items.length < 2 ? items.length : 2,
+            numberOfCardsDisplayed: items.length < 5 ? items.length : 5,
             cardBuilder:
                 (context, index, percentThresholdX, percentThresholdY) {
               final item = items[index];
@@ -42,7 +42,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                 // 카드 전체를 화면 가운데 정렬
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width *
-                      0.8, // 화면 너비의 80%로 카드 크기 설정
+                      0.9, // 화면 너비의 80%로 카드 크기 설정
                   height: MediaQuery.of(context).size.height *
                       0.4, // 화면 높이의 40%로 카드 크기 설정
                   child: Card(
