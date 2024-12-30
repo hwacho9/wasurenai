@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:provider/provider.dart';
+import 'package:wasurenai/screens/edit_tiem_view.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/item_list_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
@@ -98,6 +99,22 @@ class _ItemListScreenState extends State<ItemListScreen> {
             style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditItemView(
+                    situation: widget.situation,
+                    userId: widget.userId,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: viewModel.isLoading
           ? Center(child: CircularProgressIndicator())
