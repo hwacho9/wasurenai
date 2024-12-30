@@ -13,8 +13,8 @@ class CircleFloatingActionButton extends StatelessWidget {
     required this.onPressed,
     required this.icon,
     this.tooltip = '',
-    this.backgroundColor = Colors.blue, // 기본 배경색
-    this.iconColor = Colors.white, // 기본 아이콘 색
+    this.backgroundColor = Colors.white, // 기본 배경색
+    this.iconColor = Colors.black, // 기본 아이콘 색
     this.size = 56.0, // 기본 사이즈 (FloatingActionButton 기본 크기와 동일)
   });
 

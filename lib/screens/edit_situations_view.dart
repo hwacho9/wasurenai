@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import '../../viewmodels/edit_situations_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
 import '../../widgets/custom_header.dart';
@@ -56,11 +57,11 @@ class EditSituationsView extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: CircleFloatingActionButton(
         onPressed: () {
           _showAddSituationModal(context, viewModel);
         },
-        child: const Icon(Icons.add),
+        icon: Icons.add_circle_outline,
       ),
     );
   }

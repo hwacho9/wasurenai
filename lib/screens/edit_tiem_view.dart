@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/edit_item_view_model.dart';
 import '../../widgets/custom_list_tile.dart';
@@ -72,11 +73,11 @@ class _EditItemViewState extends State<EditItemView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: CircleFloatingActionButton(
         onPressed: () {
           _showAddItemModal(context, viewModel);
         },
-        child: const Icon(Icons.add),
+        icon: Icons.add_circle_outline,
       ),
     );
   }
