@@ -86,4 +86,23 @@ class ItemService {
       print('Error deleting item: $e');
     }
   }
+
+  Stream<List<Item>> listenToItems(String userId, String situationName) {
+    return _firestore
+        .collection('Users')
+        .doc(userId)
+        .collection('situations')
+        .doc(situationName)
+        .snapshots()
+        .map((snapshot) {
+      final data = snapshot.data();
+      if (data != null && data['items'] != null) {
+        return (data['items'] as List<dynamic>)
+            .map((itemJson) => Item.fromJson(itemJson))
+            .toList();
+      } else {
+        return [];
+      }
+    });
+  }
 }

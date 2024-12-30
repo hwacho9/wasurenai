@@ -16,11 +16,11 @@ class EditSituationsView extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(title: Text('편집')),
+      appBar: AppBar(title: const Text('편집')),
       body: viewModel.isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : viewModel.situations.isEmpty
-              ? Center(child: Text('리스트가 비어 있습니다.'))
+              ? const Center(child: Text('리스트가 비어 있습니다.'))
               : ListView.builder(
                   itemCount: viewModel.situations.length,
                   itemBuilder: (context, index) {
@@ -34,7 +34,7 @@ class EditSituationsView extends StatelessWidget {
                         // 필요한 경우 상황 항목 클릭 동작 추가
                       },
                       trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           viewModel.deleteSituation(index);
                         },
@@ -46,7 +46,7 @@ class EditSituationsView extends StatelessWidget {
         onPressed: () {
           _showAddSituationModal(context, viewModel);
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -63,7 +63,7 @@ class EditSituationsView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Situation Name'),
+                decoration: const InputDecoration(labelText: 'Situation Name'),
                 onChanged: (value) {
                   situationName = value;
                 },
@@ -75,7 +75,7 @@ class EditSituationsView extends StatelessWidget {
                     Navigator.pop(context);
                   }
                 },
-                child: Text('추가'),
+                child: const Text('추가'),
               ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
+import 'package:wasurenai/screens/setting_view.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import '../../models/situation.dart';
 import '../../viewmodels/home_view_model.dart';
@@ -116,10 +117,22 @@ class HomeView extends StatelessWidget {
                 settingsIcon: Icons.settings,
                 onPressed: () {
                   // 설정 버튼 클릭 동작
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingView(),
+                    ),
+                  );
                 },
                 editLabel: '編集',
                 editIcon: Icons.edit,
                 onEditPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditSituationsView(),
+                    ),
+                  );
                   // 편집 버튼 클릭 동작
                 },
               )

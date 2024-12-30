@@ -3,13 +3,21 @@ import '../models/situation.dart';
 import '../services/item_service.dart';
 
 class ItemListViewModel extends ChangeNotifier {
-  final ItemService _itemService = ItemService();
   List<Item> _items = [];
   bool _isLoading = false;
   String? _currentSituationName;
 
   List<Item> get items => _items;
   bool get isLoading => _isLoading;
+
+  final ItemService _itemService = ItemService();
+  Stream<List<Item>>? _itemStream;
+  Stream<List<Item>>? get itemStream => _itemStream;
+
+  void listenToItems(String userId, String situationName) {
+    _itemStream = _itemService.listenToItems(userId, situationName);
+    notifyListeners();
+  }
 
   void setSituation(String situationName) {
     if (_currentSituationName != situationName) {

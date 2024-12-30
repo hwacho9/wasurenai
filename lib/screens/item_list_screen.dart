@@ -1,38 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:provider/provider.dart';
+import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import 'package:wasurenai/screens/edit_tiem_view.dart';
 import '../../models/situation.dart';
-import '../../viewmodels/item_list_view_model.dart';
+import '../../services/item_service.dart';
 import '../../widgets/custom_list_tile.dart';
+import '../../widgets/custom_header.dart';
 
-class ItemListScreen extends StatefulWidget {
+class ItemListScreen extends StatelessWidget {
   final Situation situation;
   final String userId;
 
   ItemListScreen({required this.situation, required this.userId});
 
-  @override
-  _ItemListScreenState createState() => _ItemListScreenState();
-}
-
-class _ItemListScreenState extends State<ItemListScreen> {
-  late ItemListViewModel viewModel;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // ViewModel 초기화 및 데이터 로드
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel = Provider.of<ItemListViewModel>(context, listen: false);
-      viewModel.fetchItems(widget.userId, widget.situation.name);
-    });
-  }
-
   // 카드 스와이퍼를 표시하는 함수
-  void _showItemSwiper(int index, ItemListViewModel viewModel) {
-    if (viewModel.items.isEmpty) return;
+  void _showItemSwiper(BuildContext context, List<Item> items, int index) {
+    if (items.isEmpty) return;
 
     showModalBottomSheet(
       context: context,
@@ -41,13 +24,12 @@ class _ItemListScreenState extends State<ItemListScreen> {
         return FractionallySizedBox(
           heightFactor: 0.8,
           child: CardSwiper(
-            cardsCount: viewModel.items.length,
+            cardsCount: items.length,
             initialIndex: index,
-            numberOfCardsDisplayed:
-                viewModel.items.length < 5 ? viewModel.items.length : 5,
+            numberOfCardsDisplayed: items.length < 5 ? items.length : 5,
             cardBuilder:
                 (context, index, percentThresholdX, percentThresholdY) {
-              final item = viewModel.items[index];
+              final item = items[index];
               return Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -65,17 +47,17 @@ class _ItemListScreenState extends State<ItemListScreen> {
                         children: [
                           Text(
                             item.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             item.location,
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.grey),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -91,108 +73,77 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<ItemListViewModel>(context);
+    final ItemService itemService = ItemService();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.situation.name,
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditItemView(
-                    situation: widget.situation,
-                    userId: widget.userId,
-                  ),
-                ),
-              );
+      body: Stack(
+        children: [
+          // 상단 헤더
+          CustomHeader(
+            title: situation.name,
+            onBackPress: () {
+              Navigator.pop(context); // 이전 화면으로 이동
             },
           ),
-        ],
-      ),
-      body: viewModel.isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: viewModel.items.length,
-              itemBuilder: (context, index) {
-                final item = viewModel.items[index];
-                return CustomListTile(
-                  title: item.name,
-                  subtitle: item.location,
-                  isChecked: item.isChecked,
-                  onCheckedChange: (bool value) {
-                    setState(() {
-                      item.isChecked = value;
-                    });
-                  },
-                  onTap: () {
-                    _showItemSwiper(index, viewModel); // 클릭 시 스와이퍼 호출
-                  },
-                );
-              },
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddItemModal(context, viewModel);
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
-  // 아이템 추가 모달 표시
-  void _showAddItemModal(BuildContext context, ItemListViewModel viewModel) {
-    String itemName = '';
-    String itemLocation = '';
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 16,
-              right: 16,
-              top: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          Column(
             children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Item Name'),
-                onChanged: (value) {
-                  itemName = value;
-                },
+              const SizedBox(height: 150), // 헤더 높이 조정
+              Expanded(
+                child: StreamBuilder<List<Item>>(
+                  stream: itemService.listenToItems(userId, situation.name),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('리스트가 비어 있습니다.'));
+                    }
+
+                    final items = snapshot.data!;
+
+                    return ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        return CustomListTile(
+                          title: item.name,
+                          subtitle: item.location,
+                          showSwitch: false, // 스위치 비활성화
+                          onTap: () {
+                            _showItemSwiper(context, items, index);
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Item Location'),
-                onChanged: (value) {
-                  itemLocation = value;
-                },
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
+              // 하단 버튼
+              ReusableButtons(
+                settingsLabel: '설정',
+                settingsIcon: Icons.settings,
                 onPressed: () {
-                  if (itemName.isNotEmpty && itemLocation.isNotEmpty) {
-                    final newItem =
-                        Item(name: itemName, location: itemLocation);
-                    viewModel.addItem(
-                        widget.userId, widget.situation.name, newItem);
-                    Navigator.pop(context);
-                  }
+                  // 설정 버튼 동작
                 },
-                child: Text('Add Item'),
+                editLabel: '편집',
+                editIcon: Icons.edit,
+                onEditPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditItemView(
+                        situation: situation,
+                        userId: userId,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
