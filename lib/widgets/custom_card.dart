@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
+  final Color? color;
 
   const CustomCard({
     required this.text,
     required this.onTap,
+    this.color,
     super.key,
   });
 
@@ -18,7 +20,7 @@ class CustomCard extends StatelessWidget {
         width: 287,
         height: 45,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: color ?? Colors.white,
           borderRadius: BorderRadius.circular(28),
           boxShadow: const [
             BoxShadow(
