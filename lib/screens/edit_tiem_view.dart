@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/screens/item_list_screen.dart';
+import 'package:wasurenai/screens/widget/item_modal_helper.dart';
 import 'package:wasurenai/widgets/Buttons/CircleFloatingActionButton.dart';
 import 'package:wasurenai/widgets/add_modal.dart';
 import '../../models/situation.dart';
@@ -107,40 +108,11 @@ class _EditItemViewState extends State<EditItemView> {
       ),
       floatingActionButton: CircleFloatingActionButton(
         onPressed: () {
-          _showAddItemModal(context, viewModel);
+          showAddItemModal(
+              context, viewModel, widget.userId, widget.situation.name);
         },
         icon: Icons.add_circle_outline,
       ),
-    );
-  }
-
-  void _showAddItemModal(BuildContext context, EditItemViewModel viewModel) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (context) {
-        return AddModal(
-          title: 'アイテムを追加',
-          labels: const ['アイテムの名前', '忘れた時のための "お助けメモ"'],
-          hints: const ['名前を入力してください', '場所などのメモを入力してください'],
-          buttonText: '追加する',
-          onSubmit: (values) {
-            final itemName = values[0];
-            final itemMemo = values[1];
-            viewModel.addItem(
-              widget.userId,
-              widget.situation.name,
-              Item(name: itemName, location: itemMemo),
-            );
-          },
-        );
-      },
     );
   }
 
