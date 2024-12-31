@@ -172,4 +172,44 @@ class ItemService {
       throw Exception('Failed to reset items: $e');
     }
   }
+
+  //TODO: 아이템 업데이트가 아이템 name을 기준으로 업데이트되니까 그걸 수정해야함
+  Future<void> updateItem(String userId, String situationName, String oldName,
+      Item updatedItem) async {
+    try {
+      // Firestore에서 데이터 가져오기
+      final situationRef = _firestore
+          .collection('Users')
+          .doc(userId)
+          .collection('situations')
+          .doc(situationName);
+
+      final snapshot = await situationRef.get();
+      if (snapshot.exists) {
+        final data = snapshot.data();
+        if (data != null && data['items'] != null) {
+          // 기존 아이템 리스트 가져오기
+          final items = (data['items'] as List<dynamic>)
+              .map((itemJson) => Item.fromJson(itemJson))
+              .toList();
+
+          print("items: $items");
+
+          // 업데이트할 아이템을 찾아 교체
+          final updatedItems = items.map((item) {
+            if (item.name == oldName) {
+              // 원래 이름(`oldName`)을 기준으로 아이템 찾기
+              return updatedItem.toJson();
+            }
+            return item.toJson();
+          }).toList();
+
+          // Firestore에 업데이트된 아이템 리스트 저장
+          await situationRef.update({'items': updatedItems});
+        }
+      }
+    } catch (e) {
+      throw Exception('Failed to update item: $e');
+    }
+  }
 }

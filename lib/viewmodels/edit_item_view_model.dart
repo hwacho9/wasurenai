@@ -56,4 +56,20 @@ class EditItemViewModel extends ChangeNotifier {
       debugPrint('Failed to update item order: $e');
     }
   }
+
+  void updateItem(String userId, String situationName, String oldName,
+      Item updatedItem) async {
+    try {
+      await _itemService.updateItem(
+          userId, situationName, oldName, updatedItem);
+      // UI 갱신을 위해 내부 리스트도 업데이트
+      final index = items.indexWhere((item) => item.name == oldName);
+      if (index != -1) {
+        items[index] = updatedItem;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Failed to update item: $e');
+    }
+  }
 }

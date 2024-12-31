@@ -13,8 +13,11 @@ class EditItemView extends StatefulWidget {
   final Situation situation;
   final String userId;
 
-  const EditItemView(
-      {super.key, required this.situation, required this.userId});
+  const EditItemView({
+    Key? key,
+    required this.situation,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   _EditItemViewState createState() => _EditItemViewState();
@@ -62,7 +65,7 @@ class _EditItemViewState extends State<EditItemView> {
             child: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.items.isEmpty
-                    ? const Center(child: Text('리스트가 비어 있습니다.'))
+                    ? const Center(child: Text('リストがビューにありません。'))
                     : ListView.builder(
                         itemCount: viewModel.items.length,
                         itemBuilder: (context, index) {
@@ -72,13 +75,29 @@ class _EditItemViewState extends State<EditItemView> {
                             subtitle: item.location,
                             showSwitch: false,
                             onTap: () {},
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete,
-                                  color: AppColors.lightRed),
-                              onPressed: () {
-                                viewModel.deleteItem(
-                                    widget.userId, widget.situation.name, item);
-                              },
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: AppColors.lightRed),
+                                  onPressed: () {
+                                    _showEditItemModal(
+                                        context, viewModel, item);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      color: AppColors.lightRed),
+                                  onPressed: () {
+                                    viewModel.deleteItem(
+                                      widget.userId,
+                                      widget.situation.name,
+                                      item,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -118,6 +137,41 @@ class _EditItemViewState extends State<EditItemView> {
               widget.userId,
               widget.situation.name,
               Item(name: itemName, location: itemMemo),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showEditItemModal(
+      BuildContext context, EditItemViewModel viewModel, Item item) {
+    final oldName = item.name; // 원래 이름 저장
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (context) {
+        return AddModal(
+          title: 'アイテムを編集',
+          labels: const ['アイテムの名前', '忘れた時のための "お助けメモ"'],
+          hints: const ['名前を入力してください', '場所などのメモを入力してください'],
+          initialValues: [item.name, item.location], // 기존 값 전달
+          buttonText: '更新する',
+          onSubmit: (values) {
+            final updatedName = values[0];
+            final updatedLocation = values[1];
+            viewModel.updateItem(
+              widget.userId,
+              widget.situation.name,
+              oldName, // 기존 이름 전달
+              Item(name: updatedName, location: updatedLocation),
             );
           },
         );

@@ -7,6 +7,7 @@ class AddModal extends StatelessWidget {
   final List<String> labels; // 각 입력 필드 위에 표시될 텍스트 리스트
   final String buttonText;
   final void Function(List<String> values) onSubmit;
+  final List<String>? initialValues; // 초기값 리스트
 
   const AddModal({
     required this.title,
@@ -14,13 +15,20 @@ class AddModal extends StatelessWidget {
     required this.labels,
     required this.buttonText,
     required this.onSubmit,
+    this.initialValues, // 초기값 추가
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> controllers =
-        List.generate(hints.length, (_) => TextEditingController());
+    final List<TextEditingController> controllers = List.generate(
+      hints.length,
+      (index) => TextEditingController(
+        text: initialValues != null && index < initialValues!.length
+            ? initialValues![index]
+            : '', // 초기값 설정
+      ),
+    );
 
     return Padding(
       padding: EdgeInsets.only(
@@ -41,18 +49,18 @@ class AddModal extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Label Text
                   if (label.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
                         label,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.start,
                       ),
                     ),
                   // Input Field
