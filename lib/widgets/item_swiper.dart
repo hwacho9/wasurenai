@@ -12,7 +12,7 @@ void showItemSwiper({
   if (items.isEmpty) return;
 
   showModalBottomSheet(
-    backgroundColor: AppColors.scaffoldBackground,
+    backgroundColor: Colors.white,
     context: context,
     isScrollControlled: true,
     builder: (BuildContext context) {
@@ -45,14 +45,31 @@ void showItemSwiper({
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text('End of Cards'),
-                  content: const Text('You have reached the last card.'),
+                  backgroundColor: Colors.white, // 다이얼로그 배경을 흰색으로 설정
+                  title: const Text(
+                    '全てチェックしました！',
+                    style: TextStyle(
+                      color: Colors.black, // 제목 텍스트 색상
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: const Text(
+                    '最後のカードに到達しました。',
+                    style: TextStyle(
+                      color: Colors.black, // 내용 텍스트 색상
+                    ),
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(); // 다이얼로그 닫기
                       },
-                      child: const Text('OK'),
+                      child: const Text(
+                        'OK',
+                        style: TextStyle(
+                          color: AppColors.lightRed, // 버튼 텍스트 색상
+                        ),
+                      ),
                     ),
                   ],
                 );
@@ -66,6 +83,7 @@ void showItemSwiper({
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.55,
                 child: Card(
+                  color: AppColors.scaffoldBackground,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
