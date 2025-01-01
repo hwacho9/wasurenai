@@ -42,8 +42,12 @@ class AuthService {
     }
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  Future<void> logout() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      throw Exception('Failed to logout: $e');
+    }
   }
 
   Stream<UserModel?> get user {

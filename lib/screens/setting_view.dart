@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
+import 'package:wasurenai/splash_view.dart';
+import 'package:wasurenai/viewmodels/settings_view_model.dart';
 import 'package:wasurenai/widgets/custom_card.dart';
 import 'package:wasurenai/widgets/custom_header.dart';
 
 class SettingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<SettingsViewModel>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -22,6 +26,7 @@ class SettingView extends StatelessWidget {
             top: 200,
             child: CustomCard(
               text: '設定',
+              color: AppColors.lightRed,
               onTap: () {
                 // 설정 카드 동작
               },
@@ -35,7 +40,7 @@ class SettingView extends StatelessWidget {
               children: [
                 // CustomCard for "言語"
                 CustomCard(
-                  color: AppColors.lightRed,
+                  color: Colors.white,
                   text: '言語',
                   onTap: () {
                     // "更新準備中です" 메시지 다이얼로그 표시
@@ -59,7 +64,57 @@ class SettingView extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 400), // 두 버튼 사이 간격 추가
+                const SizedBox(height: 25), // 두 버튼 사이 간격 추가
+                CustomCard(
+                  color: Colors.white,
+                  text: 'ログアウト',
+                  onTap: () {
+                    // "更新準備中です" 메시지 다이얼로그 표시
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('ログアウトしますか？'),
+                          content: const Text('ログアウトしますか？'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // 다이얼로그 닫기
+                              },
+                              child: const Text(
+                                'キャンセル',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await viewModel.logout();
+                                // 다이얼로그 닫기
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SplashView()),
+                                );
+
+                                // 삭제 완료 메시지 표시
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('ログアウトしました。'),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'ログアウト',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 375), // 두 버튼 사이 간격 추가
                 // TextButton for "アカウントを削除"
                 TextButton(
                   onPressed: () {
