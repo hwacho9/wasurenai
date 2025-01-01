@@ -40,17 +40,15 @@ class CustomCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16), // 양쪽 여백 추가
                 child: Center(
-                  child: Expanded(
-                    child: Text(
-                      text,
-                      maxLines: 1, // 최대 줄 수를 1로 설정
-                      overflow: TextOverflow.ellipsis, // 글자가 넘치면 "..."으로 표시
-                      textAlign: TextAlign.left, // 왼쪽 정렬
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    text,
+                    maxLines: 1, // 최대 줄 수를 1로 설정
+                    overflow: TextOverflow.ellipsis, // 글자가 넘치면 "..."으로 표시
+                    textAlign: TextAlign.left, // 왼쪽 정렬
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
