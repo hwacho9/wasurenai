@@ -17,8 +17,9 @@ void showNotificationSettingsModal({
     "土曜日": false,
     "日曜日": false,
   };
+  bool isAlarmOn = false; // 알람 상태 초기값
 
-  final NotificationViewModel _notificationViewModal = NotificationViewModel();
+  final NotificationViewModel notificationViewModal = NotificationViewModel();
 
   showModalBottomSheet(
     context: context,
@@ -31,7 +32,7 @@ void showNotificationSettingsModal({
     ),
     builder: (BuildContext context) {
       return FutureBuilder<Map<String, dynamic>>(
-        future: _notificationViewModal.getNotificationSettings(
+        future: notificationViewModal.getNotificationSettings(
           userId: userId,
           situationName: situationName,
         ),
@@ -48,10 +49,10 @@ void showNotificationSettingsModal({
           }
 
           if (snapshot.hasData && snapshot.data != null) {
-            // Firestore 데이터를 가져와 초기화
             final settings = snapshot.data!;
             final alarmDays = settings['alarmDays'] as Map<String, dynamic>;
             final alarmTime = settings['alarmTime'] as String;
+            isAlarmOn = settings['isAlarmOn'] as bool;
 
             for (String day in selectedDays.keys) {
               if (alarmDays.containsKey(day)) {
@@ -80,15 +81,41 @@ void showNotificationSettingsModal({
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      '通知設定',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    // 알람 켜기/끄기 상태 추가
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'アラームを有効にする',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Theme(
+                          data: ThemeData(
+                            useMaterial3: true,
+                          ).copyWith(
+                            colorScheme: Theme.of(context)
+                                .colorScheme
+                                .copyWith(outline: AppColors.lightRed),
+                          ),
+                          child: Switch(
+                            value: isAlarmOn,
+                            onChanged: (bool value) {
+                              setState(() {
+                                isAlarmOn = value;
+                              });
+                            },
+                            activeColor: Colors.white,
+                            activeTrackColor: AppColors.lightRed,
+                            inactiveTrackColor: Colors.white,
+                            inactiveThumbColor: AppColors.lightRed,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
-                    // 알림 시간 설정
                     ListTile(
                       leading:
                           const Icon(Icons.access_time, color: Colors.black),
@@ -104,18 +131,9 @@ void showNotificationSettingsModal({
                             return Theme(
                               data: ThemeData(
                                 colorScheme: const ColorScheme.light(
-                                  primary:
-                                      AppColors.lightRed, // 선택된 시간을 강조하는 색상
-                                  onPrimary: Colors.white, // 텍스트 및 아이콘 색상
-                                  onSurface: Colors.black, // 기본 텍스트 색상
-                                ),
-                                timePickerTheme: TimePickerThemeData(
-                                  dialBackgroundColor:
-                                      Colors.grey[300], // 다이얼 배경 색상
-                                  hourMinuteTextColor:
-                                      Colors.black, // 시/분 텍스트 색상
-                                  dayPeriodTextColor:
-                                      AppColors.lightRed, // 오전/오후 텍스트 색상
+                                  primary: AppColors.lightRed,
+                                  onPrimary: Colors.white,
+                                  onSurface: Colors.black,
                                 ),
                               ),
                               child: child!,
@@ -130,8 +148,6 @@ void showNotificationSettingsModal({
                       },
                     ),
                     const SizedBox(height: 16),
-
-                    // 요일 선택
                     const Text(
                       '通知する曜日',
                       style:
@@ -148,13 +164,13 @@ void showNotificationSettingsModal({
                             style: TextStyle(
                               color: selectedDays[day]!
                                   ? Colors.white
-                                  : Colors.black, // 선택 상태에 따른 텍스트 색상
+                                  : Colors.black,
                             ),
                           ),
                           selected: selectedDays[day]!,
-                          backgroundColor: Colors.white, // 기본 배경색
-                          selectedColor: AppColors.lightRed, // 선택된 상태의 배경색
-                          checkmarkColor: Colors.white, // 체크 표시 색상
+                          backgroundColor: Colors.white,
+                          selectedColor: AppColors.lightRed,
+                          checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
                             setState(() {
                               selectedDays[day] = selected;
@@ -164,19 +180,17 @@ void showNotificationSettingsModal({
                       }).toList(),
                     ),
                     const SizedBox(height: 24),
-
-                    // 저장 버튼
                     ElevatedButton(
                       onPressed: () async {
                         try {
-                          // 변경된 값 Firestore에 저장
-                          await _notificationViewModal
+                          await notificationViewModal
                               .updateNotificationSettings(
                             userId: userId,
                             situationName: situationName,
                             alarmDays: selectedDays,
                             alarmTime:
                                 '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}',
+                            isAlarmOn: isAlarmOn,
                           );
 
                           Navigator.of(context).pop();
@@ -198,21 +212,21 @@ void showNotificationSettingsModal({
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.lightRed, // 버튼 배경색
+                        backgroundColor: AppColors.lightRed,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30), // 더 둥근 모서리
+                          borderRadius: BorderRadius.circular(30),
                         ),
                         padding: const EdgeInsets.symmetric(
-                          vertical: 6, // 버튼 높이 증가
-                          horizontal: 40, // 버튼 너비 증가
+                          vertical: 6,
+                          horizontal: 40,
                         ),
                       ),
                       child: const Text(
                         '保存する',
                         style: TextStyle(
-                          fontSize: 15, // 글자 크기 약간 증가
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // 텍스트 색상을 흰색으로
+                          color: Colors.white,
                         ),
                       ),
                     ),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/src/material/time.dart';
 
 class NotificationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -10,6 +9,7 @@ class NotificationService {
     required String situationName,
     required Map<String, bool> alarmDays,
     required String alarmTime,
+    required bool isAlarmOn, // 추가
   }) async {
     try {
       // Firestore 경로
@@ -23,6 +23,7 @@ class NotificationService {
       await situationRef.update({
         'alarmDays': alarmDays,
         'alarmTime': alarmTime,
+        'isAlarmOn': isAlarmOn, // 추가
       });
 
       print("Notification settings updated successfully.");
@@ -50,6 +51,7 @@ class NotificationService {
         return {
           'alarmDays': data?['alarmDays'] ?? {},
           'alarmTime': data?['alarmTime'] ?? "",
+          'isAlarmOn': data?['isAlarmOn'] ?? false, // 추가
         };
       } else {
         throw Exception('Situation not found.');

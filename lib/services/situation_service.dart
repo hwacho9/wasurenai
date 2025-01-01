@@ -43,6 +43,7 @@ class SituationService {
       'items': [], // 초기에는 빈 items 리스트
       'alarmTime': alarmTime, // 알람 시각 (예: "07:30")
       'alarmDays': alarmDays, // 알림 활성화 요일 (예: {'mon': true, 'tue': false, ...})
+      'isAlarmOn': false, // 알림 활성화 여부
     });
   }
 
