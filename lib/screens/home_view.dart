@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
     if (user == null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => WelcomeView()),
+        MaterialPageRoute(builder: (context) => const WelcomeView()),
       );
     }
 
