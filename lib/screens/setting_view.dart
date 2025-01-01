@@ -76,6 +76,7 @@ class SettingView extends StatelessWidget {
                         return AlertDialog(
                           title: const Text('ログアウトしますか？'),
                           content: const Text('ログアウトしますか？'),
+                          backgroundColor: Colors.white,
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -123,6 +124,7 @@ class SettingView extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
+                          backgroundColor: Colors.white,
                           title: const Text('アカウントを削除する'),
                           content: const Text('本当にアカウントを削除しますか？'),
                           actions: [
@@ -137,17 +139,10 @@ class SettingView extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // TODO: 회원 삭제 로직 호출
+                                Navigator.of(context).pop(); // 확인 다이얼로그 닫기
 
-                                // 다이얼로그 닫기
-                                Navigator.of(context).pop();
-
-                                // 삭제 완료 메시지 표시
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('회원이 삭제되었습니다。'),
-                                  ),
-                                );
+                                // 비밀번호 입력 다이얼로그 호출
+                                _showPasswordInputDialog(context, viewModel);
                               },
                               child: const Text(
                                 'アカウントを削除',
@@ -171,4 +166,65 @@ class SettingView extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showPasswordInputDialog(
+    BuildContext context, SettingsViewModel viewModel) async {
+  final TextEditingController passwordController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text('パスワードを入力してください'),
+        content: TextField(
+          controller: passwordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: 'パスワード',
+            hintText: 'パスワードを入力してください',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // 다이얼로그 닫기
+            },
+            child: const Text('キャンセル', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () async {
+              final password = passwordController.text;
+
+              if (password.isNotEmpty) {
+                try {
+                  await viewModel.deleteAccount(password); // 회원 삭제 호출
+
+                  Navigator.of(context).pop(); // 입력 다이얼로그 닫기
+
+                  // 삭제 후 스플래시 화면으로 이동
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SplashView()),
+                  );
+
+                  // 성공 메시지 표시
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('アカウントが削除されました。')),
+                  );
+                } catch (e) {
+                  // 실패 메시지 표시
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('削除に失敗しました: $e')),
+                  );
+                }
+              }
+            },
+            child: const Text('確認', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      );
+    },
+  );
 }

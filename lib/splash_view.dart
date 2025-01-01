@@ -17,11 +17,10 @@ class SplashView extends StatelessWidget {
               children: [
                 Image.asset(
                   'assets/images/icon.png', // 로컬 이미지 경로
-                  width: 150, // 원하는 크기로 설정
-                  height: 150,
+                  width: 250, // 원하는 크기로 설정
+                  height: 250,
                 ),
                 SizedBox(height: 20),
-                CircularProgressIndicator(),
               ],
             );
           },

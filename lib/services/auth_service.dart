@@ -50,6 +50,41 @@ class AuthService {
     }
   }
 
+  Future<void> deleteAccount(String password) async {
+    final user = _auth.currentUser;
+
+    if (user != null) {
+      final userId = user.uid;
+
+      try {
+        // 사용자 재인증
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: password,
+        );
+        await user.reauthenticateWithCredential(credential);
+
+        // Firestore 논리 삭제
+        await _firestore.collection('Users').doc(userId).set(
+          {
+            'isDeleted': true,
+            'deletedAt': FieldValue.serverTimestamp(),
+          },
+          SetOptions(merge: true),
+        );
+
+        // Firebase Auth 계정 삭제
+        await user.delete();
+
+        print('사용자 계정 삭제 완료');
+      } catch (e) {
+        throw Exception('Failed to delete user: $e');
+      }
+    } else {
+      throw Exception('No user is currently signed in');
+    }
+  }
+
   Stream<UserModel?> get user {
     return _auth.authStateChanges().map(_userFromFirebase);
   }

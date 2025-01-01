@@ -15,4 +15,13 @@ class SettingsViewModel extends ChangeNotifier {
       throw Exception('Failed to logout: $e');
     }
   }
+
+  Future<void> deleteAccount(String password) async {
+    try {
+      await _authService.deleteAccount(password); // 비밀번호 전달
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to delete account: $e');
+    }
+  }
 }
