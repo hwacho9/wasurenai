@@ -12,20 +12,25 @@ class WelcomeView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/images/icon.png', // 로컬 이미지 경로
+              width: 200, // 원하는 크기로 설정
+              height: 200,
+            ),
             const Text(
-              '◯◯アプリへようこそ！',
+              'MOTTAへようこそ',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             const Text(
-              'いつでも同期できるようにサインインしてください',
+              'いつでも同期できるようにサインインしましょう！',
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
             RectangleButton(
-              text: 'メーアドでログイン',
+              text: 'ログイン',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -36,22 +41,6 @@ class WelcomeView extends StatelessWidget {
               textColor: Colors.black,
             ),
             const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignupView()),
-                );
-              },
-              child: const Text(
-                '会員登録',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
           ],
         ),
       ),

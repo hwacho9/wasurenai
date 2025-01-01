@@ -15,6 +15,7 @@ class LoginView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             TextField(
               decoration: InputDecoration(labelText: 'Email'),
@@ -27,7 +28,7 @@ class LoginView extends StatelessWidget {
             ),
             SizedBox(height: 16),
             RectangleButton(
-              text: 'Login',
+              text: 'ログイン',
               onPressed: () async {
                 await viewModel.login();
                 if (viewModel.errorMessage == null) {
@@ -49,6 +50,22 @@ class LoginView extends StatelessWidget {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupView()),
+                );
+              },
+              child: const Text(
+                '新規登録',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
           ],
         ),
       ),
