@@ -48,6 +48,8 @@ firebase-debug.log
 
 /lib/firebase_options.dart
 /ios/Runner/GoogleService-Info.plist
+/lib/firebase_options
+/ios/Runner/GoogleService
 
 
 /Users/chosunghwa/Desktop/workspace/wasurenai/lib/firebase_options.dart

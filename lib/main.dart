@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ItemListViewModel()),
       ],
       child: MaterialApp(
-        title: 'MOTTA - 持った？',
+        title: 'MOTTA - 持った',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: AppColors.primarySwatch,
