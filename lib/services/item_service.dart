@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../models/situation.dart';
 
 class ItemService {
@@ -83,7 +84,7 @@ class ItemService {
         await situationDoc.update({'items': updatedItems});
       }
     } catch (e) {
-      print('Error deleting item: $e');
+      debugPrint('Error deleting item: $e');
     }
   }
 
@@ -193,7 +194,7 @@ class ItemService {
               .map((itemJson) => Item.fromJson(itemJson))
               .toList();
 
-          print("items: $items");
+          debugPrint("items: $items");
 
           // 업데이트할 아이템을 찾아 교체
           final updatedItems = items.map((item) {

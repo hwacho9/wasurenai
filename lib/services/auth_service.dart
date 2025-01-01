@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:wasurenai/models/user_mode.dart';
 
 class AuthService {
@@ -76,7 +77,7 @@ class AuthService {
         // Firebase Auth 계정 삭제
         await user.delete();
 
-        print('사용자 계정 삭제 완료');
+        debugPrint('사용자 계정 삭제 완료');
       } catch (e) {
         throw Exception('Failed to delete user: $e');
       }

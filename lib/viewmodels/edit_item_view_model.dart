@@ -16,7 +16,7 @@ class EditItemViewModel extends ChangeNotifier {
     try {
       items = await _itemService.fetchItems(userId, situationName);
     } catch (e) {
-      print('Error fetching items: $e');
+      debugPrint('Error fetching items: $e');
     } finally {
       isLoading = false;
       notifyListeners();
@@ -30,7 +30,7 @@ class EditItemViewModel extends ChangeNotifier {
       items.add(item); // 로컬 데이터 업데이트
       notifyListeners();
     } catch (e) {
-      print('Error adding item: $e');
+      debugPrint('Error adding item: $e');
     }
   }
 
@@ -44,7 +44,7 @@ class EditItemViewModel extends ChangeNotifier {
           existingItem.location == item.location); // 로컬 데이터 업데이트
       notifyListeners();
     } catch (e) {
-      print('Error deleting item: $e');
+      debugPrint('Error deleting item: $e');
     }
   }
 
