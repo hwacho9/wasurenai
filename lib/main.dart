@@ -40,7 +40,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ItemListViewModel()),
       ],
       child: MaterialApp(
-        title: '물건 체크 앱',
+        title: 'MOTTA - 持った？',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: AppColors.primarySwatch,
           scaffoldBackgroundColor: AppColors.scaffoldBackground,
