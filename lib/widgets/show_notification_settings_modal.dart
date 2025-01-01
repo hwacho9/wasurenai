@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/viewmodels/notification_view_model.dart';
 
 void showNotificationSettingsModal({
@@ -37,7 +38,7 @@ void showNotificationSettingsModal({
         builder: (BuildContext context,
             AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('');
+            return const Text('');
           }
 
           if (snapshot.hasError) {
@@ -99,6 +100,27 @@ void showNotificationSettingsModal({
                         final TimeOfDay? picked = await showTimePicker(
                           context: context,
                           initialTime: selectedTime,
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData(
+                                colorScheme: const ColorScheme.light(
+                                  primary:
+                                      AppColors.lightRed, // 선택된 시간을 강조하는 색상
+                                  onPrimary: Colors.white, // 텍스트 및 아이콘 색상
+                                  onSurface: Colors.black, // 기본 텍스트 색상
+                                ),
+                                timePickerTheme: TimePickerThemeData(
+                                  dialBackgroundColor:
+                                      Colors.grey[300], // 다이얼 배경 색상
+                                  hourMinuteTextColor:
+                                      Colors.black, // 시/분 텍스트 색상
+                                  dayPeriodTextColor:
+                                      AppColors.lightRed, // 오전/오후 텍스트 색상
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
                         if (picked != null && picked != selectedTime) {
                           setState(() {
@@ -108,20 +130,31 @@ void showNotificationSettingsModal({
                       },
                     ),
                     const SizedBox(height: 16),
+
                     // 요일 선택
                     const Text(
                       '通知する曜日',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
                       children: selectedDays.keys.map((String day) {
                         return FilterChip(
-                          label: Text(day),
+                          label: Text(
+                            day,
+                            style: TextStyle(
+                              color: selectedDays[day]!
+                                  ? Colors.white
+                                  : Colors.black, // 선택 상태에 따른 텍스트 색상
+                            ),
+                          ),
                           selected: selectedDays[day]!,
+                          backgroundColor: Colors.white, // 기본 배경색
+                          selectedColor: AppColors.lightRed, // 선택된 상태의 배경색
+                          checkmarkColor: Colors.white, // 체크 표시 색상
                           onSelected: (bool selected) {
                             setState(() {
                               selectedDays[day] = selected;
@@ -131,6 +164,8 @@ void showNotificationSettingsModal({
                       }).toList(),
                     ),
                     const SizedBox(height: 24),
+
+                    // 저장 버튼
                     ElevatedButton(
                       onPressed: () async {
                         try {
@@ -163,14 +198,25 @@ void showNotificationSettingsModal({
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: AppColors.lightRed, // 버튼 배경색
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(30), // 더 둥근 모서리
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 6, // 버튼 높이 증가
+                          horizontal: 40, // 버튼 너비 증가
                         ),
                       ),
-                      child: const Text('保存する'),
+                      child: const Text(
+                        '保存する',
+                        style: TextStyle(
+                          fontSize: 15, // 글자 크기 약간 증가
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // 텍스트 색상을 흰색으로
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 50),
                   ],
                 ),
               );

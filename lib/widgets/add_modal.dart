@@ -16,8 +16,8 @@ class AddModal extends StatelessWidget {
     required this.buttonText,
     required this.onSubmit,
     this.initialValues, // 초기값 추가
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class AddModal extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 20),
 
