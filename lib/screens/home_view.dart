@@ -11,14 +11,9 @@ import 'edit_situations_view.dart';
 import 'item_list_screen.dart';
 import '../../widgets/custom_list_tile.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
