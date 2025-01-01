@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
+import 'package:wasurenai/screens/auth/terms_and_privacy_view.dart';
 import 'package:wasurenai/splash_view.dart';
 import 'package:wasurenai/viewmodels/settings_view_model.dart';
 import 'package:wasurenai/widgets/custom_card.dart';
@@ -62,6 +63,19 @@ class SettingView extends StatelessWidget {
                         );
                       },
                     );
+                  },
+                ),
+                const SizedBox(height: 25), // 두 버튼 사이 간격 추가
+                CustomCard(
+                  color: Colors.white,
+                  text: '利用契約&プライバシーポリシー',
+                  onTap: () {
+                    // 이용약관 및 개인정보 처리방침 화면으로 이동
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsAndPrivacyView(),
+                        ));
                   },
                 ),
                 const SizedBox(height: 25), // 두 버튼 사이 간격 추가
