@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 햅틱 피드백 사용을 위해 추가
 import 'package:wasurenai/data/app_colors.dart';
 import 'package:wasurenai/screens/item_list_screen.dart';
 import 'package:wasurenai/screens/widget/item_modal_helper.dart';
@@ -15,10 +16,10 @@ class EditItemView extends StatefulWidget {
   final String userId;
 
   const EditItemView({
-    Key? key,
+    super.key,
     required this.situation,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   _EditItemViewState createState() => _EditItemViewState();
@@ -62,46 +63,59 @@ class _EditItemViewState extends State<EditItemView> {
           ),
           // 리스트 콘텐츠
           Padding(
-            padding: const EdgeInsets.only(top: 150), // 헤더 아래로 내용 배치
+            padding: const EdgeInsets.only(top: 200), // 헤더 아래로 내용 배치
             child: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.items.isEmpty
                     ? const Center(child: Text('リストがビューにありません。'))
-                    : ListView.builder(
-                        itemCount: viewModel.items.length,
-                        itemBuilder: (context, index) {
-                          final item = viewModel.items[index];
-                          return CustomListTile(
-                            title: item.name,
-                            subtitle: item.location,
-                            showSwitch: false,
-                            onTap: () {},
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: AppColors.lightRed),
-                                  onPressed: () {
-                                    _showEditItemModal(
-                                        context, viewModel, item);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: AppColors.lightRed),
-                                  onPressed: () {
-                                    viewModel.deleteItem(
-                                      widget.userId,
-                                      widget.situation.name,
-                                      item,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
+                    : ReorderableListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 0),
+                        onReorder: (oldIndex, newIndex) async {
+                          HapticFeedback.lightImpact(); // 위치 변경 시 햅틱 피드백 추가
+                          setState(() {
+                            if (newIndex > oldIndex) newIndex -= 1;
+                            final item = viewModel.items.removeAt(oldIndex);
+                            viewModel.items.insert(newIndex, item);
+                          });
+
+                          // Firebase에 변경된 순서 저장
+                          viewModel.updateItemOrder(
+                              widget.userId, widget.situation.name);
                         },
+                        children: [
+                          for (final item in viewModel.items)
+                            CustomListTile(
+                              key: ValueKey(item.name),
+                              title: item.name,
+                              subtitle: item.location,
+                              showSwitch: false,
+                              onTap: () {},
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: AppColors.lightRed),
+                                    onPressed: () {
+                                      _showEditItemModal(
+                                          context, viewModel, item);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: AppColors.lightRed),
+                                    onPressed: () {
+                                      viewModel.deleteItem(
+                                        widget.userId,
+                                        widget.situation.name,
+                                        item,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
           ),
         ],
