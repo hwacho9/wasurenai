@@ -23,7 +23,20 @@ class EditSituationsViewModel extends ChangeNotifier {
   }
 
   Future<void> addSituation(String name) async {
-    await _situationService.addSituation(name);
+    // 알람 초기값 설정 (빈 시각과 빈 Map)
+    const String initialAlarmTime = ""; // 빈 시각
+    final Map<String, bool> initialAlarmDays = {
+      'mon': false,
+      'tue': false,
+      'wed': false,
+      'thu': false,
+      'fri': false,
+      'sat': false,
+      'sun': false,
+    };
+
+    await _situationService.addSituation(
+        name, initialAlarmTime, initialAlarmDays);
     await fetchSituations();
   }
 

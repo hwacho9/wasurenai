@@ -28,7 +28,8 @@ class SituationService {
   }
 
   /// Firestore에 새로운 Situation 추가하기
-  Future<void> addSituation(String situationName) async {
+  Future<void> addSituation(String situationName, String alarmTime,
+      Map<String, bool> alarmDays) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -40,6 +41,8 @@ class SituationService {
         .set({
       'name': situationName,
       'items': [], // 초기에는 빈 items 리스트
+      'alarmTime': alarmTime, // 알람 시각 (예: "07:30")
+      'alarmDays': alarmDays, // 알림 활성화 요일 (예: {'mon': true, 'tue': false, ...})
     });
   }
 
