@@ -5,12 +5,14 @@ class CustomCard extends StatelessWidget {
   final VoidCallback onTap;
   final Color? color;
   final IconData? icon; // 선택적으로 아이콘을 추가할 수 있는 필드
+  final Widget? trailing; // 추가된 trailing 필드
 
   const CustomCard({
     required this.text,
     required this.onTap,
     this.color,
     this.icon, // 아이콘 초기값은 null
+    this.trailing,
     super.key,
   });
 
@@ -64,6 +66,13 @@ class CustomCard extends StatelessWidget {
                   color: Colors.black, // 아이콘 색상
                   size: 20, // 아이콘 크기
                 ),
+              ),
+            if (trailing != null) // trailing이 존재하는 경우만 표시
+              Positioned(
+                right: 16,
+                top: 0,
+                bottom: 0,
+                child: trailing!,
               ),
           ],
         ),

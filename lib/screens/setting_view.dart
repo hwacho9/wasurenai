@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wasurenai/data/app_colors.dart';
@@ -11,6 +13,10 @@ class SettingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SettingsViewModel>(context);
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final user = _auth.currentUser;
+    final uid = user?.uid;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -39,33 +45,58 @@ class SettingView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // CustomCard for "言語"
+                CustomCard(
+                  color: Colors.white,
+                  text: 'アラーム設定',
+                  onTap: () {},
+                  trailing: FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(uid) // 사용자 ID
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      if (!snapshot.hasData || snapshot.data == null) {
+                        return const Text('データなし');
+                      }
+
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      final bool isAlarmOn = data['isAlarmOn'] ?? false;
+
+                      return Theme(
+                        data: ThemeData(
+                          useMaterial3: true,
+                        ).copyWith(
+                          colorScheme: Theme.of(context)
+                              .colorScheme
+                              .copyWith(outline: AppColors.lightRed),
+                        ),
+                        child: Switch(
+                          value: isAlarmOn,
+                          onChanged: (bool newValue) async {
+                            await viewModel.toggleIsAlarmOn(uid!, isAlarmOn);
+                          },
+                          activeColor: Colors.white,
+                          activeTrackColor: AppColors.lightRed,
+                          inactiveTrackColor: Colors.white,
+                          inactiveThumbColor: AppColors.lightRed,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 25), // 두 버튼 사이 간격 추가
                 CustomCard(
                   color: Colors.white,
                   text: '言語',
-                  onTap: () {
-                    // "更新準備中です" 메시지 다이얼로그 표시
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.white,
-                          title: const Text('お知らせ'),
-                          content: const Text('更新準備中です。'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop(); // 다이얼로그 닫기
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                  onTap: () {},
                 ),
-                const SizedBox(height: 25), // 두 버튼 사이 간격 추가
+                const SizedBox(height: 25),
+
                 CustomCard(
                   color: Colors.white,
                   text: '利用契約&プライバシーポリシー',

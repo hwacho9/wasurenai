@@ -35,6 +35,8 @@ class AuthService {
       await _firestore.collection('Users').doc(result.user!.uid).set({
         'uid': result.user!.uid,
         'email': result.user!.email,
+        'createdAt': FieldValue.serverTimestamp(),
+        'isAlarmOn': false,
       });
 
       return _userFromFirebase(result.user);
@@ -88,5 +90,18 @@ class AuthService {
 
   Stream<UserModel?> get user {
     return _auth.authStateChanges().map(_userFromFirebase);
+  }
+
+  Future<void> updateIsAlarmOn({
+    required String userId,
+    required bool isAlarmOn,
+  }) async {
+    try {
+      await _firestore.collection('Users').doc(userId).update({
+        'isAlarmOn': isAlarmOn,
+      });
+    } catch (e) {
+      throw Exception('Failed to update isAlarmOn: $e');
+    }
   }
 }

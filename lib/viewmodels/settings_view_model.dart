@@ -24,4 +24,16 @@ class SettingsViewModel extends ChangeNotifier {
       throw Exception('Failed to delete account: $e');
     }
   }
+
+  Future<void> toggleIsAlarmOn(String userId, bool currentStatus) async {
+    try {
+      await _authService.updateIsAlarmOn(
+        userId: userId,
+        isAlarmOn: !currentStatus, // 현재 상태를 반전
+      );
+      notifyListeners(); // UI 갱신
+    } catch (e) {
+      debugPrint('Failed to toggle isAlarmOn: $e');
+    }
+  }
 }
