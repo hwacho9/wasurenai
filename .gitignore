@@ -45,5 +45,10 @@ app.*.map.json
 #firebase options
 firebase.json
 firebase-debug.log
+
+/lib/firebase_options.dart
+/ios/Runner/GoogleService-Info.plist
+
+
 /Users/chosunghwa/Desktop/workspace/wasurenai/lib/firebase_options.dart
 /Users/chosunghwa/Desktop/workspace/wasurenai/ios/Runner/GoogleService-Info.plist
