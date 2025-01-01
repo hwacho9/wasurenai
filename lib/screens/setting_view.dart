@@ -90,12 +90,13 @@ class SettingView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 25), // 두 버튼 사이 간격 추가
-                CustomCard(
-                  color: Colors.white,
-                  text: '言語',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 25),
+                // TODO: "言語" 変換
+                // CustomCard(
+                //   color: Colors.white,
+                //   text: '言語',
+                //   onTap: () {},
+                // ),
+                // const SizedBox(height: 25),
 
                 CustomCard(
                   color: Colors.white,
