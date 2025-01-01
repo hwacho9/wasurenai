@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class ClockWidget extends StatefulWidget {
-  const ClockWidget({Key? key}) : super(key: key);
+  const ClockWidget({super.key});
 
   @override
   _ClockWidgetState createState() => _ClockWidgetState();

@@ -76,7 +76,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
           Column(
             children: [
               const SizedBox(height: 170),
-              ClockWidget(),
+              const ClockWidget(),
               const SizedBox(height: 20),
               CustomCard(
                 text: widget.situation.name,
