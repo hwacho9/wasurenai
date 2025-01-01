@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wasurenai/screens/auth/login_veiw.dart';
-import 'package:wasurenai/screens/auth/signup_view.dart';
 import 'package:wasurenai/widgets/Buttons/RectangleButton.dart';
 
 class WelcomeView extends StatelessWidget {
+  const WelcomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

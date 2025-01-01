@@ -75,6 +75,7 @@ class _EditItemViewState extends State<EditItemView> {
                     situationName: widget.situation.name,
                   );
                 },
+                icon: Icons.arrow_forward_ios, // 아이콘 추가
               ),
               Expanded(
                 child: Padding(
@@ -137,6 +138,8 @@ class _EditItemViewState extends State<EditItemView> {
                             ),
                 ),
               ),
+              //TODO: 리스트영역 흰색 테두리로 감싸기
+              // const SizedBox(height: 130),
             ],
           ),
         ],

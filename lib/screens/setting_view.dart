@@ -129,7 +129,7 @@ class SettingView extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 375), // 두 버튼 사이 간격 추가
+                const SizedBox(height: 30), // 두 버튼 사이 간격 추가
                 // TextButton for "アカウントを削除"
                 TextButton(
                   onPressed: () {
@@ -148,7 +148,8 @@ class SettingView extends StatelessWidget {
                               },
                               child: const Text(
                                 'キャンセル',
-                                style: TextStyle(color: Colors.grey),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 10),
                               ),
                             ),
                             TextButton(

@@ -86,7 +86,7 @@ void showNotificationSettingsModal({
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'アラームを有効にする',
+                          '通知をオンにする',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

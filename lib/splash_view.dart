@@ -5,6 +5,8 @@ import 'package:wasurenai/screens/home_view.dart';
 import 'welcome_view.dart';
 
 class SplashView extends StatelessWidget {
+  const SplashView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +22,7 @@ class SplashView extends StatelessWidget {
                   width: 250, // 원하는 크기로 설정
                   height: 250,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             );
           },
@@ -31,7 +33,7 @@ class SplashView extends StatelessWidget {
 
   Future<void> _navigateBasedOnAuth(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await Future.delayed(Duration(seconds: 1)); // 스플래시 화면 표시 시간
+    await Future.delayed(const Duration(seconds: 1)); // 스플래시 화면 표시 시간
     if (authProvider.user != null) {
       Navigator.pushReplacement(
         context,
@@ -40,7 +42,7 @@ class SplashView extends StatelessWidget {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => WelcomeView()),
+        MaterialPageRoute(builder: (context) => const WelcomeView()),
       );
     }
   }

@@ -4,11 +4,13 @@ class CustomCard extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final Color? color;
+  final IconData? icon; // 선택적으로 아이콘을 추가할 수 있는 필드
 
   const CustomCard({
     required this.text,
     required this.onTap,
     this.color,
+    this.icon, // 아이콘 초기값은 null
     super.key,
   });
 
@@ -30,18 +32,40 @@ class CustomCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(
-          child: Text(
-            text,
-            maxLines: 1, // 최대 줄 수를 1로 설정
-            overflow: TextOverflow.ellipsis, // 글자가 넘치면 "..."으로 표시
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            InkWell(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16), // 양쪽 여백 추가
+                child: Center(
+                  child: Expanded(
+                    child: Text(
+                      text,
+                      maxLines: 1, // 최대 줄 수를 1로 설정
+                      overflow: TextOverflow.ellipsis, // 글자가 넘치면 "..."으로 표시
+                      textAlign: TextAlign.left, // 왼쪽 정렬
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
+            if (icon != null) // 아이콘이 존재하는 경우만 표시
+              Positioned(
+                right: 16,
+                top: 0,
+                bottom: 0,
+                child: Icon(
+                  icon,
+                  color: Colors.black, // 아이콘 색상
+                  size: 20, // 아이콘 크기
+                ),
+              ),
+          ],
         ),
       ),
     );

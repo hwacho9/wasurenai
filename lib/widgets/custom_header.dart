@@ -17,7 +17,7 @@ class CustomHeader extends StatelessWidget {
       top: 100,
       child: GestureDetector(
         onTap: onBackPress,
-        child: Container(
+        child: SizedBox(
           width: 120,
           height: 75,
           child: Row(
@@ -53,7 +53,7 @@ class CustomHeader extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
