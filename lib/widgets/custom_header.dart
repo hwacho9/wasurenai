@@ -18,7 +18,7 @@ class CustomHeader extends StatelessWidget {
       child: GestureDetector(
         onTap: onBackPress,
         child: Container(
-          width: 182,
+          width: 120,
           height: 75,
           child: Row(
             children: [
@@ -47,7 +47,9 @@ class CustomHeader extends StatelessWidget {
                   child: Center(
                     child: Text(
                       title,
-                      textAlign: TextAlign.center,
+                      maxLines: 1, // 최대 줄 수를 1로 설정
+                      overflow: TextOverflow.ellipsis, // 글자가 넘치면 "..."으로 표시
+                      textAlign: TextAlign.start,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,

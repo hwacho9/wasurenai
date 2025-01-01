@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wasurenai/screens/home_view.dart';
 import 'package:wasurenai/widgets/Buttons/reusable_buttons.dart';
 import 'package:wasurenai/screens/edit_tiem_view.dart';
+import 'package:wasurenai/widgets/clock_widget.dart';
 import 'package:wasurenai/widgets/custom_card.dart';
 import 'package:wasurenai/widgets/item_swiper.dart';
 import '../../models/situation.dart';
@@ -74,7 +75,9 @@ class _ItemListScreenState extends State<ItemListScreen> {
           ),
           Column(
             children: [
-              const SizedBox(height: 200),
+              const SizedBox(height: 170),
+              ClockWidget(),
+              const SizedBox(height: 20),
               CustomCard(
                 text: widget.situation.name,
                 onTap: () {},
