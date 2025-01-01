@@ -6,6 +6,7 @@ import 'package:wasurenai/firebase_options.dart';
 import 'package:wasurenai/provider/auth_provider.dart';
 import 'package:wasurenai/services/auth_service.dart';
 import 'package:wasurenai/splash_view.dart';
+import 'package:wasurenai/utils/push_notifications.dart';
 import 'package:wasurenai/viewmodels/edit_item_view_model.dart';
 import 'package:wasurenai/viewmodels/edit_situations_view_model.dart';
 import 'package:wasurenai/viewmodels/home_view_model.dart';
@@ -19,10 +20,18 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  _initializePushNotifications();
+  runApp(const MyApp());
+}
+
+Future<void> _initializePushNotifications() async {
+  final pushNotificationService = PushNotificationService();
+  await pushNotificationService.setupPushNotifications();
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.wasurenai.app</string>
+	<string>com.example.wasurenai</string>
 	<key>PROJECT_ID</key>
 	<string>wasurenai-113be</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1086330927496:ios:1755cec45e55d0adc1e23d</string>
+	<string>1:1086330927496:ios:bf5f903d9fd36221c1e23d</string>
 </dict>
 </plist>
