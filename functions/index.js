@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-exports.sendDailyAlarms = onSchedule("every 1 minutes", async (event) => {
+exports.sendDailyAlarms = onSchedule("every 10 minutes", async (event) => {
   try {
     console.log("Starting scheduled function to send alarms...");
 
@@ -24,8 +24,16 @@ exports.sendDailyAlarms = onSchedule("every 1 minutes", async (event) => {
     const currentHour = jstDate.getHours().toString().padStart(2, "0");
     const currentMinute = jstDate.getMinutes().toString().padStart(2, "0");
     const currentTime = `${currentHour}:${currentMinute}`;
+
+    // 10분 후의 시간 계산
+    const next10MinutesDate = new Date(jstDate.getTime() + 10 * 60 * 1000);
+    const nextHour = next10MinutesDate.getHours().toString().padStart(2, "0");
+    const nextMinute = next10MinutesDate.getMinutes().toString().padStart(2, "0");
+    const nextTime = `${nextHour}:${nextMinute}`;
+
     const currentDay = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"][jstDate.getDay()];
 
+    console.log(`Current time: ${currentTime}, Next 10-min time: ${nextTime}`);
 
     // 사용자별로 상황 데이터 가져오기
     for (const userDoc of usersSnapshot.docs) {
@@ -40,9 +48,13 @@ exports.sendDailyAlarms = onSchedule("every 1 minutes", async (event) => {
           const {alarmTime, alarmDays, isAlarmOn, name} = data;
 
           console.log(`${data.name}: ${alarmTime}, ${alarmDays}, ${isAlarmOn}`);
-          console.log(`Current time: ${currentTime}, current day: ${currentDay}`);
-          // 알림 조건: isAlarmOn이 true, 설정된 시간과 현재 시간이 동일, 현재 요일이 활성화됨
-          if (isAlarmOn && alarmTime === currentTime && alarmDays[currentDay]) {
+          // 알림 조건: isAlarmOn이 true, 현재 요일이 활성화됨, alarmTime이 현재 ~ 10분 사이에 포함됨
+          if (
+            isAlarmOn &&
+            alarmDays[currentDay] &&
+            alarmTime >= currentTime &&
+            alarmTime < nextTime
+          ) {
             const message = {
               notification: {
                 title: "MOTTAからのリマインダー",
