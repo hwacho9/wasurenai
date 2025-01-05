@@ -35,6 +35,8 @@
 	</array>
 	<key>UIUserNotificationSettings</key>
 	<string>アプリ通知を設定するには、権限が必要です。</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>このアプリは、ユーザーに合わせた広告を表示するためにデータを追跡します。</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
