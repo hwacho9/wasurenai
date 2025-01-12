@@ -171,7 +171,7 @@ class _EditItemViewState extends State<EditItemView> {
         return AddModal(
           title: 'アイテムを編集',
           labels: const ['アイテムの名前', '忘れた時のための "お助けメモ"'],
-          hints: const ['名前を入力してください', '場所などのメモを入力してください'],
+          hints: const ['名前を入力してください', '(任意)場所などのメモを入力してください'],
           initialValues: [item.name, item.location], // 기존 값 전달
           buttonText: '更新する',
           onSubmit: (values) {

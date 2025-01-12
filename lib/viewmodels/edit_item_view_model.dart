@@ -26,11 +26,15 @@ class EditItemViewModel extends ChangeNotifier {
   // 아이템 추가
   Future<void> addItem(String userId, String situationName, Item item) async {
     try {
+      debugPrint("✅ addItem 호출됨: ${item.name}, ${item.location}");
+
       await _itemService.addItemToSituation(userId, situationName, item);
+
       items.add(item); // 로컬 데이터 업데이트
-      notifyListeners();
+      notifyListeners(); // UI 업데이트
+      debugPrint("✅ 아이템 추가 완료 및 UI 업데이트됨");
     } catch (e) {
-      debugPrint('Error adding item: $e');
+      debugPrint('❌ Error adding item: $e');
     }
   }
 

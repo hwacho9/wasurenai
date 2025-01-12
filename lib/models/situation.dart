@@ -26,7 +26,7 @@ class Item {
   final String location;
   bool isChecked;
 
-  Item({required this.name, required this.location, this.isChecked = false});
+  Item({required this.name, this.location = "", this.isChecked = false});
 
   Map<String, dynamic> toJson() {
     return {
@@ -39,15 +39,15 @@ class Item {
   static Item fromJson(Map<String, dynamic> json) {
     return Item(
       name: json['name'],
-      location: json['location'],
+      location: json['location'] ?? "", // 🔥 null일 경우 빈 문자열로 처리
       isChecked: json['isChecked'] ?? false,
     );
   }
 
-  Item copyWith({bool? isChecked}) {
+  Item copyWith({String? name, String? location, bool? isChecked}) {
     return Item(
-      name: name,
-      location: location,
+      name: name ?? this.name,
+      location: location ?? this.location,
       isChecked: isChecked ?? this.isChecked,
     );
   }

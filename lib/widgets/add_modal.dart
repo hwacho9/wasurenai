@@ -95,7 +95,20 @@ class AddModal extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               final values = controllers.map((c) => c.text).toList();
-              if (values.any((value) => value.isEmpty)) return;
+
+              // 🔥 첫 번째 입력값(아이템 이름)이 비어있으면 추가 방지
+              if (values[0].isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('アイテムの名前を入力してください。')),
+                );
+                return;
+              }
+
+              // 메모가 비어있으면 빈 문자열("")로 처리
+              if (values.length > 1 && values[1].isEmpty) {
+                values[1] = '';
+              }
+
               onSubmit(values);
               Navigator.pop(context);
             },
