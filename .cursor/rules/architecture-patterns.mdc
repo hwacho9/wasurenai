@@ -1,0 +1,73 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Architecture Patterns & Conventions
+
+## MVVM Pattern Implementation
+
+### ViewModels
+- All ViewModels extend `ChangeNotifier` from Provider package
+- Located in [lib/viewmodels/](mdc:lib/viewmodels)
+- Handle business logic, API calls, and state management
+- Use `notifyListeners()` to update UI when state changes
+
+Example: [home_view_model.dart](mdc:lib/viewmodels/home_view_model.dart) manages home screen state
+
+### Views (Screens)
+- Located in [lib/screens/](mdc:lib/screens)
+- Stateless or Stateful widgets that consume ViewModels
+- Use `Provider.of<ViewModel>(context)` to access state
+- Focus only on UI rendering and user interactions
+
+Example: [home_view.dart](mdc:lib/screens/home_view.dart) displays the main screen
+
+### Models
+- Data classes in [lib/models/](mdc:lib/models)
+- Include JSON serialization methods (`toJson()`, `fromJson()`)
+- Primary models: [situation.dart](mdc:lib/models/situation.dart), [user_mode.dart](mdc:lib/models/user_mode.dart)
+
+## Provider Setup
+
+Configured in [main.dart](mdc:lib/main.dart) using `MultiProvider`:
+```dart
+MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ChangeNotifierProvider(create: (_) => HomeViewModel()),
+    // ... other providers
+  ],
+  child: MaterialApp(...)
+)
+```
+
+## Service Layer
+
+Services in [lib/services/](mdc:lib/services) handle external integrations:
+- [auth_service.dart](mdc:lib/services/auth_service.dart) - Firebase Authentication
+- [notification_service.dart](mdc:lib/services/notification_service.dart) - Push notifications
+- [item_service.dart](mdc:lib/services/item_service.dart) - Firestore CRUD operations
+- [situation_service.dart](mdc:lib/services/situation_service.dart) - Situation management
+
+## Widget Organization
+
+### Reusable Components
+- [lib/widgets/](mdc:lib/widgets) contains reusable UI components
+- Organized by functionality (Buttons, forms, etc.)
+- [custom_list_tile.dart](mdc:lib/widgets/custom_list_tile.dart) - Custom list items
+- [reusable_buttons.dart](mdc:lib/widgets/Buttons/reusable_buttons.dart) - Common button patterns
+
+### Naming Conventions
+- Views end with `_view.dart` (e.g., `home_view.dart`)
+- ViewModels end with `_view_model.dart`
+- Services end with `_service.dart`
+- Widgets use descriptive names reflecting their purpose
+
+## State Management Pattern
+
+1. **UI Events** → Trigger ViewModel methods
+2. **ViewModel** → Calls appropriate Service
+3. **Service** → Handles Firebase/external operations
+4. **ViewModel** → Updates state and calls `notifyListeners()`
+5. **UI** → Rebuilds automatically via Provider

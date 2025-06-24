@@ -1,38 +1,33 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>MOTTA - 持った | 絶対に忘れないアプリ</title>
+        <meta
+            name="description"
+            content="忘れ物を防ぐシンプルなアプリ。シーン別にアイテムを管理して、大切な物を絶対に忘れないようにしましょう。" />
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="app-icon.png" />
+        <link rel="apple-touch-icon" href="icons/app-icon.png" />
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
-
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="wasurenai">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>wasurenai</title>
-  <link rel="manifest" href="manifest.json">
-</head>
-<body>
-  <script src="flutter_bootstrap.js" async></script>
-</body>
+        <!-- 즉시 랜딩페이지로 리다이렉트 -->
+        <script>
+            window.location.replace("/landing.html");
+        </script>
+    </head>
+    <body>
+        <!-- JavaScript가 비활성화된 경우를 위한 대체 -->
+        <div
+            style="
+                font-family: 'Noto Sans JP', sans-serif;
+                text-align: center;
+                padding: 50px;
+            ">
+            <h1>MOTTA - 持った</h1>
+            <p>페이지를 로딩 중입니다...</p>
+            <p><a href="/landing.html">여기를 클릭하여 계속 진행하세요</a></p>
+        </div>
+    </body>
 </html>

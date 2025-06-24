@@ -1,0 +1,101 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# UI Components & Design System
+
+## Theme & Colors
+
+The app uses a consistent color scheme defined in [app_colors.dart](mdc:lib/data/app_colors.dart):
+- Primary colors based on light red theme
+- Material Design color swatch
+- Consistent background colors across screens
+
+Theme configuration in [main.dart](mdc:lib/main.dart):
+```dart
+theme: ThemeData(
+  primarySwatch: AppColors.primarySwatch,
+  scaffoldBackgroundColor: AppColors.scaffoldBackground,
+  appBarTheme: const AppBarTheme(
+    color: AppColors.appBarBackground,
+  ),
+)
+```
+
+## Custom Widgets
+
+### Core Components
+
+1. **CustomListTile** ([custom_list_tile.dart](mdc:lib/widgets/custom_list_tile.dart))
+   - Reusable list item with consistent styling
+   - Supports title, subtitle, switch toggle, and tap actions
+   - Used throughout the app for consistent list presentation
+
+2. **ReusableButtons** ([reusable_buttons.dart](mdc:lib/widgets/Buttons/reusable_buttons.dart))
+   - Bottom action button component
+   - Includes settings and edit button functionality
+   - Consistent positioning and styling
+
+3. **Custom Cards** ([custom_card.dart](mdc:lib/widgets/custom_card.dart))
+   - Card components with app-specific styling
+
+4. **Input Forms** ([Input_form_field.dart](mdc:lib/widgets/Input_form_field.dart))
+   - Standardized form input fields
+   - Consistent validation and styling
+
+### Specialized Widgets
+
+1. **ItemSwiper** ([item_swiper.dart](mdc:lib/widgets/item_swiper.dart))
+   - Swipe-based interaction for item management
+   - Used in item list screens
+
+2. **ClockWidget** ([clock_widget.dart](mdc:lib/widgets/clock_widget.dart))
+   - Time-related display components
+
+3. **AddModal** ([add_modal.dart](mdc:lib/widgets/add_modal.dart))
+   - Modal dialogs for adding new items/situations
+
+4. **CircleFloatingActionButton** ([CircleFloatingActionButton.dart](mdc:lib/widgets/Buttons/CircleFloatingActionButton.dart))
+   - Custom FAB implementation
+
+## Screen Layout Patterns
+
+### Common Layout Structure:
+1. **Scaffold** with consistent background color
+2. **Custom headers** using [custom_header.dart](mdc:lib/widgets/custom_header.dart)
+3. **Stack-based layouts** with decorative elements
+4. **Bottom button sections** for primary actions
+
+### Navigation Patterns:
+- `Navigator.push()` for standard screen transitions
+- `Navigator.pushReplacement()` for auth state changes
+- Modal presentations for forms and settings
+
+## Design Language
+
+### Visual Elements:
+- **Curved backgrounds**: Elliptical bottom curves for visual interest
+- **Circle avatars**: Decorative elements in various sizes
+- **Consistent spacing**: Symmetric padding and margins
+- **Japanese text**: UI supports Japanese language (今日はどこへ行く？)
+
+### Interaction Patterns:
+- **Tap to navigate**: List items lead to detail screens
+- **Swipe actions**: Item management through gestures
+- **Modal workflows**: Add/edit operations in overlays
+- **Toggle switches**: Settings and preferences
+
+## Assets
+
+Images stored in [assets/images/](mdc:assets/images):
+- App icons for different platforms
+- Custom graphics and illustrations
+
+## Responsive Design
+
+The app uses:
+- `MediaQuery.of(context).size` for responsive sizing
+- Flexible layouts with `Flexible` and `Expanded` widgets
+- Percentage-based heights and widths
+- Platform-adaptive visual density

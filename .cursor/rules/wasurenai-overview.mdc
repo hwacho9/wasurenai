@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Wasurenai Project Overview
+
+**Wasurenai** (忘れない - "Don't Forget") is a Flutter app that helps users manage items they need to remember to bring in different situations.
+
+## Project Architecture
+
+This Flutter app follows the **MVVM (Model-View-ViewModel)** pattern with Provider for state management and Firebase for backend services.
+
+### Core Architecture Layers:
+
+1. **Models** ([lib/models/](mdc:lib/models)) - Data structures
+2. **Views** ([lib/screens/](mdc:lib/screens)) - UI screens and pages  
+3. **ViewModels** ([lib/viewmodels/](mdc:lib/viewmodels)) - Business logic and state management
+4. **Services** ([lib/services/](mdc:lib/services)) - External integrations (Firebase, notifications)
+5. **Providers** ([lib/provider/](mdc:lib/provider)) - Global state management
+6. **Widgets** ([lib/widgets/](mdc:lib/widgets)) - Reusable UI components
+
+## Entry Point
+
+The app starts from [main.dart](mdc:lib/main.dart), which:
+- Initializes Firebase
+- Sets up push notifications
+- Configures Provider-based state management
+- Defines the app theme using [app_colors.dart](mdc:lib/data/app_colors.dart)
+- Starts with [splash_view.dart](mdc:lib/splash_view.dart)
+
+## Key Features
+
+- **Authentication**: User signup/login with Firebase Auth
+- **Situation Management**: Create and manage different scenarios (e.g., "Going to Gym", "Business Trip")
+- **Item Tracking**: Add items to situations with locations and check-off functionality
+- **Push Notifications**: Reminder system using Firebase Cloud Messaging
+- **Multi-platform**: Supports iOS, Android, Web, Windows, Linux, and macOS
+
+## State Management
+
+Uses **Provider pattern** with multiple ViewModels:
+- AuthProvider for authentication state
+- Individual ViewModels for each screen (Home, Settings, etc.)
+- ViewModels handle business logic and communicate with services
+
+## Database Structure
+
+Firebase Firestore with collections:
+- `Users` - User profiles and settings
+- `Situations` - User-created scenarios and their associated items

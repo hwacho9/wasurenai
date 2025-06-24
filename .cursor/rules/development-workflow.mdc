@@ -1,0 +1,136 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Development Workflow & Guidelines
+
+## Project Dependencies
+
+Key dependencies in [pubspec.yaml](mdc:pubspec.yaml):
+
+### Core Flutter & Firebase:
+- `firebase_core: ^3.8.0` - Firebase initialization
+- `firebase_auth: ^5.3.3` - Authentication
+- `cloud_firestore: ^5.5.0` - Database
+
+### State Management:
+- `provider: ^6.1.2` - State management solution
+
+### UI & UX:
+- `flutter_card_swiper: ^7.0.2` - Card swiping functionality
+- `cupertino_icons: ^1.0.8` - iOS-style icons
+
+### Notifications:
+- `firebase_messaging: ^15.1.6` - Push notifications
+- `flutter_local_notifications: ^18.0.1` - Local notifications
+- `flutter_app_badger: ^1.5.0` - App badge management
+
+### Utilities:
+- `shared_preferences: ^2.3.4` - Local storage
+- `permission_handler: ^11.3.1` - Device permissions
+- `url_launcher: ^6.3.1` - External URL handling
+- `app_tracking_transparency: ^2.0.6+1` - iOS tracking transparency
+
+## Development Commands
+
+```bash
+# Install dependencies
+flutter pub get
+
+# Run the app
+flutter run
+
+# Build for different platforms
+flutter build apk          # Android APK
+flutter build ios          # iOS
+flutter build web          # Web version
+
+# Analyze code
+flutter analyze
+
+# Run tests
+flutter test
+```
+
+## Platform Configuration
+
+### Android Setup:
+- Firebase config: [android/app/google-services.json](mdc:android/app/google-services.json)
+- Build config: [android/app/build.gradle](mdc:android/app/build.gradle)
+- Permissions in AndroidManifest.xml
+
+### iOS Setup:
+- Firebase config in iOS Runner project
+- Info.plist configuration for permissions
+- Podfile for CocoaPods dependencies
+
+## Debugging Guidelines
+
+### Common Issues:
+1. **Firebase not initialized**: Ensure Firebase.initializeApp() is called
+2. **Provider not found**: Check MultiProvider setup in main.dart
+3. **Permission denied**: Verify permissions in platform-specific configs
+4. **Null user**: Handle authentication state properly
+
+### Debugging Tools:
+- Flutter Inspector for widget tree
+- Firebase Console for backend data
+- Device logs for crash analysis
+- Network inspector for API calls
+
+## Code Organization Best Practices
+
+### File Structure:
+- Group related files in appropriate directories
+- Use descriptive file names with proper suffixes
+- Maintain consistent import ordering
+
+### Naming Conventions:
+- PascalCase for classes and widgets
+- camelCase for variables and methods
+- snake_case for file names
+- SCREAMING_SNAKE_CASE for constants
+
+### State Management:
+- Keep ViewModels focused on single responsibility
+- Use Services for external API calls
+- Maintain separation between UI and business logic
+- Handle loading states and error conditions
+
+## Testing Strategy
+
+### Unit Tests:
+- Test business logic in ViewModels
+- Test data models serialization
+- Test service layer methods
+
+### Widget Tests:
+- Test UI components in isolation
+- Test user interactions
+- Test state changes
+
+### Integration Tests:
+- Test complete user flows
+- Test Firebase integration
+- Test navigation between screens
+
+## Deployment
+
+### Android:
+- Generate signed APK for release
+- Update version in pubspec.yaml
+- Test on various device sizes
+
+### iOS:
+- Archive and upload to App Store Connect
+- Update iOS version numbers
+- Test on different iOS versions
+
+## Performance Considerations
+
+- Optimize Firebase queries with proper indexing
+- Use ListView.builder for large lists
+- Implement proper image caching
+- Monitor memory usage with large datasets
+- Use const constructors where possible

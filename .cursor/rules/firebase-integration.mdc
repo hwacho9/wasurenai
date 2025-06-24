@@ -1,0 +1,85 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Firebase Integration Guide
+
+## Firebase Setup
+
+Firebase is initialized in [main.dart](mdc:lib/main.dart) before running the app:
+```dart
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+```
+
+Configuration files:
+- **Android**: [android/app/google-services.json](mdc:android/app/google-services.json)
+- **iOS**: iOS configuration in Runner project
+- **Firebase Options**: Auto-generated firebase_options.dart
+
+## Firebase Services Used
+
+### 1. Firebase Authentication
+- Handled by [auth_service.dart](mdc:lib/services/auth_service.dart)
+- Managed globally by [auth_provider.dart](mdc:lib/provider/auth_provider.dart)
+- Features:
+  - Email/password authentication
+  - User registration with profile creation
+  - Account deletion with re-authentication
+  - Automatic auth state listening
+
+### 2. Cloud Firestore
+- Database structure:
+  ```
+  Users/{userId}
+    - uid: string
+    - email: string
+    - createdAt: timestamp
+    - isAlarmOn: boolean
+    - isDeleted: boolean (for soft deletion)
+  
+  Situations/{userId}/userSituations/{situationId}
+    - name: string
+    - items: array of Item objects
+  ```
+
+### 3. Firebase Cloud Messaging (FCM)
+- Push notification setup in [push_notifications.dart](mdc:lib/utils/push_notifications.dart)
+- Local notifications via [notification_service.dart](mdc:lib/services/notification_service.dart)
+- Features:
+  - Foreground/background message handling
+  - Local notification scheduling
+  - Permission management
+
+## Authentication Flow
+
+1. **Login/Signup**: [login_view.dart](mdc:lib/screens/auth/login_veiw.dart) and [signup_view.dart](mdc:lib/screens/auth/signup_view.dart)
+2. **Auth State**: Monitored by [auth_provider.dart](mdc:lib/provider/auth_provider.dart)
+3. **Navigation**: [splash_view.dart](mdc:lib/splash_view.dart) handles initial routing based on auth state
+4. **Protected Routes**: Views check `FirebaseAuth.instance.currentUser` for access control
+
+## Data Operations
+
+### Situation Management
+- CRUD operations in [situation_service.dart](mdc:lib/services/situation_service.dart)
+- ViewModels: [edit_situations_view_model.dart](mdc:lib/viewmodels/edit_situations_view_model.dart)
+- UI: [edit_situations_view.dart](mdc:lib/screens/edit_situations_view.dart)
+
+### Item Management  
+- Operations in [item_service.dart](mdc:lib/services/item_service.dart)
+- ViewModels: [edit_item_view_model.dart](mdc:lib/viewmodels/edit_item_view_model.dart), [item_list_view_model.dart](mdc:lib/viewmodels/item_list_view_model.dart)
+- UI: [item_list_screen.dart](mdc:lib/screens/item_list_screen.dart)
+
+## Security Rules
+
+Firestore rules should ensure:
+- Users can only access their own data
+- Authenticated users required for all operations
+- Proper validation of data structure
+
+## Error Handling
+
+Services use try-catch blocks and rethrow exceptions with descriptive messages.
+ViewModels handle service errors and update UI state accordingly.

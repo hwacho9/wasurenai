@@ -1,0 +1,107 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Navigation Flow & Screen Architecture
+
+## App Navigation Structure
+
+```
+SplashView (Entry Point)
+├── WelcomeView (Unauthenticated)
+│   ├── LoginView
+│   │   └── TermsAndPrivacyView
+│   └── SignupView
+│       └── TermsAndPrivacyView
+└── HomeView (Authenticated)
+    ├── SettingView
+    │   └── Various settings modals
+    ├── EditSituationsView
+    │   └── Add/Edit situation modals
+    └── ItemListScreen
+        └── Edit item functionality
+```
+
+## Screen Responsibilities
+
+### Authentication Flow
+- **[splash_view.dart](mdc:lib/splash_view.dart)**: Initial loading and auth state checking
+- **[welcome_view.dart](mdc:lib/welcome_view.dart)**: Landing page for unauthenticated users
+- **[login_veiw.dart](mdc:lib/screens/auth/login_veiw.dart)**: User login form
+- **[signup_view.dart](mdc:lib/screens/auth/signup_view.dart)**: User registration form
+- **[terms_and_privacy_view.dart](mdc:lib/screens/auth/terms_and_privacy_view.dart)**: Legal agreements
+
+### Main Application Flow
+- **[home_view.dart](mdc:lib/screens/home_view.dart)**: Main dashboard showing situations list
+- **[item_list_screen.dart](mdc:lib/screens/item_list_screen.dart)**: Items within a specific situation
+- **[edit_situations_view.dart](mdc:lib/screens/edit_situations_view.dart)**: Manage situations (add/edit/delete)
+- **[setting_view.dart](mdc:lib/screens/setting_view.dart)**: App settings and user preferences
+
+## Navigation Patterns
+
+### Authentication Guards
+Each protected screen checks authentication status:
+```dart
+final user = FirebaseAuth.instance.currentUser;
+if (user == null) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => const WelcomeView()),
+  );
+}
+```
+
+### Navigation Methods
+- **Standard Navigation**: `Navigator.push()` for normal screen transitions
+- **Replacement Navigation**: `Navigator.pushReplacement()` for auth state changes
+- **Modal Navigation**: Modal dialogs for forms and settings
+
+### Data Passing
+- **Route Parameters**: Pass objects like `Situation` between screens
+- **User ID**: Extract from `FirebaseAuth.instance.currentUser?.uid`
+- **Stream Data**: Real-time updates from Firestore
+
+## State Persistence
+
+### Authentication State
+- Managed by [auth_provider.dart](mdc:lib/provider/auth_provider.dart)
+- Listens to Firebase auth state changes
+- Automatically updates UI when auth state changes
+
+### Screen State
+- Each screen has its own ViewModel for local state
+- Shared state managed through Provider
+- Data fetched from Firestore in real-time via streams
+
+## Modal Workflows
+
+### Add/Edit Operations
+- Use modal dialogs from [add_modal.dart](mdc:lib/widgets/add_modal.dart)
+- Helper functions in [item_modal_helper.dart](mdc:lib/screens/widget/item_modal_helper.dart)
+- Notification settings modal in [show_notification_settings_modal.dart](mdc:lib/widgets/show_notification_settings_modal.dart)
+
+### User Interactions
+- Tap list items to navigate to detail screens
+- Use floating action buttons for add operations
+- Swipe gestures for item management
+- Bottom sheet modals for quick actions
+
+## Deep Linking & URL Handling
+
+The app supports URL launching via [url_launcher](mdc:url_launcher) package for:
+- External links from settings
+- Terms and privacy policy links
+- Help and support URLs
+
+## Error Handling in Navigation
+
+### Network Errors
+- Show appropriate error messages
+- Maintain navigation state during errors
+- Retry mechanisms for failed operations
+
+### Permission Errors
+- Handle notification permission denials
+- Guide users to system settings when needed
+- Graceful degradation for missing permissions
